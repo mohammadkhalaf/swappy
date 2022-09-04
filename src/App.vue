@@ -1,24 +1,30 @@
 <template>
-  <nav-bar></nav-bar>
-  <hero-section></hero-section>
-  <h1>hello</h1>
+  <div>
+    <nav-bar></nav-bar>
+  </div>
+  <router-view></router-view>
 </template>
 
 <script>
-import HeroSection from './components/HeroSection.vue';
 import NavBar from './components/NavBar.vue';
 export default {
   components: {
     NavBar,
-    HeroSection,
   },
 };
 </script>
 
 <style>
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;1,300;1,500&family=Ubuntu:wght@300;400;500&display=swap');
 * {
   padding: 0;
   margin: 0;
   box-sizing: border-box;
+}
+html {
+  font-size: 62.5%;
+}
+body {
+  font-family: 'Montserrat', sans-serif;
 }
 </style>
