@@ -1,7 +1,21 @@
 <template>
   <section class="exchange-list">
     <div class="list-container">
-      <div class="listitem">
+      <!-- {{ exchanges }} -->
+      <div v-for="exchange in exchanges" :key="exchange.id" class="listitem">
+        <img :src="exchange.image" :alt="exchange.title" class="img" />
+        <div class="iteminfo">
+          <div v-for="tag in exchange.tags" :key="tag">{{ tag }}</div>
+          <h2>{{ exchange.title }}</h2>
+          <div class="post-info">
+            <h3>{{ exchange.user }}</h3>
+            <p>22th Sep 2020</p>
+          </div>
+        </div>
+      </div>
+      <!-- <div class="listitem">
+
+
         <img src="" alt="" class="img" />
         <div class="iteminfo">
           <h3>tags</h3>
@@ -33,13 +47,23 @@
             <p>22th Sep 2020</p>
           </div>
         </div>
-      </div>
+      </div> -->
     </div>
   </section>
 </template>
 
 <script>
-export default {};
+export default {
+  computed: {
+    exchanges() {
+      return this.$store.getters['exchanges/exchanges'];
+    },
+  },
+  created() {
+    console.log(this.$store.state);
+    this.$store.dispatch('exchanges/getExchanges');
+  },
+};
 </script>
 
 <style scope>
@@ -73,6 +97,7 @@ export default {};
   border: 1px solid blue;
   height: 20rem;
   width: 100%;
+  object-fit: cover;
 }
 .post-info {
   display: flex;
