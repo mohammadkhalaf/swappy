@@ -13,41 +13,6 @@
           </div>
         </div>
       </div>
-      <!-- <div class="listitem">
-
-
-        <img src="" alt="" class="img" />
-        <div class="iteminfo">
-          <h3>tags</h3>
-          <h2>Title</h2>
-          <div class="post-info">
-            <h3>Author</h3>
-            <p>22th Sep 2020</p>
-          </div>
-        </div>
-      </div>
-      <div class="listitem">
-        <img src="" alt="" class="img" />
-        <div class="iteminfo">
-          <h3>tags</h3>
-          <h2>Title</h2>
-          <div class="post-info">
-            <h3>Author</h3>
-            <p>22th Sep 2020</p>
-          </div>
-        </div>
-      </div>
-      <div class="listitem">
-        <img src="" alt="" class="img" />
-        <div class="iteminfo">
-          <h3>tags</h3>
-          <h2>Title</h2>
-          <div class="post-info">
-            <h3>Author</h3>
-            <p>22th Sep 2020</p>
-          </div>
-        </div>
-      </div> -->
     </div>
   </section>
 </template>
