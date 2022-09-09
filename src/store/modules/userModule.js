@@ -12,9 +12,13 @@ export default {
       console.log('from mutaion' + error);
       state.error = error;
     },
+    removeAlert(state) {
+      state.error = null;
+    },
   },
+
   actions: {
-    async register({ commit }, payload) {
+    async register({ commit, dispatch }, payload) {
       const { email, password } = payload;
       try {
         const auth = getAuth();
@@ -26,7 +30,13 @@ export default {
         return userCredetials.user;
       } catch (error) {
         commit('setError', error.message);
+        dispatch('remvoeAlert');
       }
+    },
+    async remvoeAlert({ commit }) {
+      setTimeout(() => {
+        commit('removeAlert');
+      }, 3000);
     },
   },
   getters: {

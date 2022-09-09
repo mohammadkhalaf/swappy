@@ -78,16 +78,18 @@ export default {
           console.log('password and confirm passwords must match ');
         } else {
           this.isLoading = true;
-          await this.$store.dispatch('user/register', data);
+          try {
+            const x = await this.$store.dispatch('user/register', data);
+
+            if (x) {
+              this.$router.push('/');
+            }
+          } catch (error) {
+            console.log(error);
+          }
+
           this.isLoading = false;
         }
-
-        // // console.log('s');
-        // if (this.email && this.password && this.name && this.confirmPassword) {
-        //   return;
-        // } else {
-        //   console.log('please fill all fields');
-        // }
       }
     },
   },
