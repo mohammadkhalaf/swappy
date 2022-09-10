@@ -87,6 +87,7 @@ export default {
         exchanges: user.exchanges,
         email: user.email,
         id: user.uid,
+        credit: 0,
       });
     },
     async remvoeAlert({ commit }) {

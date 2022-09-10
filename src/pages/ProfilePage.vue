@@ -3,7 +3,14 @@
     <div class="column">
       <div>
         <h2>Name</h2>
-        <button>Update profile</button>
+        <button @click="openModal">Update profile</button>
+        <teleport to="body">
+          <profile-modal
+            :user="isAuth"
+            @closeOverlay="closeOverlay"
+            v-if="isOpen"
+          ></profile-modal>
+        </teleport>
 
         <div class="item">
           <img src="" alt="" />
@@ -26,7 +33,35 @@
 </template>
 
 <script>
-export default {};
+import ProfileModal from '../components/ProfileModal.vue';
+export default {
+  components: { ProfileModal },
+  data() {
+    return {
+      isOpen: false,
+    };
+  },
+  methods: {
+    openModal() {
+      this.isOpen = true;
+    },
+    closeOverlay() {
+      this.isOpen = false;
+    },
+  },
+  watch: {
+    isAuth(auth) {
+      if (!auth) {
+        this.$router.push('/');
+      }
+    },
+  },
+  computed: {
+    isAuth() {
+      return this.$store.getters['user/getUser'];
+    },
+  },
+};
 </script>
 
 <style scoped>
