@@ -6,15 +6,17 @@
       </div>
 
       <ul>
+        <li v-if="isAuth">{{ getUser?.email }}</li>
         <li>
           <router-link to="/">Home</router-link>
         </li>
         <li>
           <router-link to="/about">About</router-link>
         </li>
-        <li>
+        <li v-if="!isAuth">
           <router-link to="/register">Register</router-link>
         </li>
+        <li @click="logoutHandler" class="clickable" v-if="isAuth">Logout</li>
       </ul>
     </nav>
   </header>
@@ -25,6 +27,19 @@ export default {
   computed: {
     stylednavbar() {
       return this.$route.path === '/' ? '' : 'coloredBG';
+    },
+    isAuth() {
+      console.log(this.$store.getters['user/isAuth']);
+      return this.$store.getters['user/isAuth'];
+    },
+    getUser() {
+      console.log(this.$store.getters['user/getUser']);
+      return this.$store.getters['user/getUser'];
+    },
+  },
+  methods: {
+    logoutHandler() {
+      this.$store.dispatch('user/logOutHandler');
     },
   },
 };
@@ -62,6 +77,9 @@ a {
   text-decoration: none;
   font-weight: 500;
   color: white;
+}
+.clickable {
+  cursor: pointer;
 }
 a:hover {
   color: orange;

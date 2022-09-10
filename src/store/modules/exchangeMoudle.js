@@ -11,7 +11,7 @@ export default {
   actions: {
     async getExchanges(context) {
       const querySnapshot = await getDocs(collection(db, 'exchanges'));
-      console.log(querySnapshot);
+
       const data = querySnapshot.docs.map((doc) => {
         return { id: doc.id, ...doc.data() };
       });

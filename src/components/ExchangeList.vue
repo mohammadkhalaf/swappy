@@ -21,12 +21,10 @@
 export default {
   computed: {
     exchanges() {
-      console.log(this.$store.getters['exchanges/exchanges']);
       return this.$store.getters['exchanges/exchanges'];
     },
   },
   created() {
-    console.log(this.$store.state);
     this.$store.dispatch('exchanges/getExchanges');
   },
 };

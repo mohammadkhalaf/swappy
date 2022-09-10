@@ -56,17 +56,28 @@ export default {
       this.isRegsitered = !this.isRegsitered;
     },
     async submitHandler() {
+      const data = {
+        name: this.name,
+        email: this.email,
+        password: this.password,
+      };
       if (this.isRegsitered) {
         if (this.email && this.password) {
-          console.log('log in ');
+          this.isLoading = true;
+          try {
+            await this.$store.dispatch('user/loginHandler', data);
+
+            // if (x) {
+            //   this.$router.push('/');
+            // }
+          } catch (error) {
+            console.log(error);
+          }
+
+          this.isLoading = false;
         }
       }
       if (!this.isRegsitered) {
-        const data = {
-          name: this.name,
-          email: this.email,
-          password: this.password,
-        };
         if (
           !this.email &&
           !this.password &&
@@ -79,17 +90,24 @@ export default {
         } else {
           this.isLoading = true;
           try {
-            const x = await this.$store.dispatch('user/register', data);
+            await this.$store.dispatch('user/register', data);
 
-            if (x) {
-              this.$router.push('/');
-            }
+            // if (x) {
+            //   this.$router.push('/');
+            // }
           } catch (error) {
             console.log(error);
           }
 
           this.isLoading = false;
         }
+      }
+    },
+  },
+  watch: {
+    isAuth(auth) {
+      if (auth) {
+        this.$router.push('/');
       }
     },
   },
@@ -100,6 +118,9 @@ export default {
     },
     isError() {
       return this.$store.getters['user/getErorrMsg'];
+    },
+    isAuth() {
+      return this.$store.getters['user/getUser'];
     },
   },
 };
