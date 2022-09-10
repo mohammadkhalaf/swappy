@@ -2,6 +2,7 @@ import { createWebHistory, createRouter } from 'vue-router';
 import HomePage from './pages/HomePage';
 import AboutPage from './pages/AboutPage';
 import RegisterPage from './pages/RegisterPage';
+import ProfilePage from './pages/ProfilePage';
 import { getAuth } from 'firebase/auth';
 
 const router = createRouter({
@@ -10,16 +11,28 @@ const router = createRouter({
     { path: '/', component: HomePage, name: 'home' },
     { path: '/about', component: AboutPage, name: 'about' },
     {
+      path: '/profile',
+      component: ProfilePage,
+      name: 'about',
+      meta: { onlyAuth: true },
+    },
+    {
       path: '/register',
       component: RegisterPage,
-      name: 'register',
+      name: 'Register',
       meta: { onlyNonAuth: true },
     },
   ],
 });
 router.beforeEach((to, _, next) => {
-  const user = getAuth().currentUser;
-  if (to.meta.onlyNonAuth) {
+  const user = !!getAuth().currentUser;
+  if (to.meta.onlyAuth) {
+    if (user) {
+      next();
+    } else {
+      next({ name: 'Register' });
+    }
+  } else if (to.meta.onlyNonAuth) {
     if (user) {
       next({ name: 'home' });
     } else {
