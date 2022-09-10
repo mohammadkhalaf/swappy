@@ -12,6 +12,14 @@
           <label class="title">Info about user</label>
           <input class="input" />
         </div>
+        <div class="field">
+          <label class="title">Your city</label>
+          <input v-model="userInfo.city" class="input" />
+        </div>
+        <div class="field">
+          <label class="title">Phone</label>
+          <input v-model="userInfo.phone" class="input" />
+        </div>
       </form>
       <footer class="modal-card-foot">
         <button @click="updateProfile" class="button is-success">
@@ -42,6 +50,7 @@ export default {
     },
     updateProfile() {
       console.log(this.userInfo);
+      this.$store.dispatch('user/updateUserProfile', this.userInfo);
     },
   },
   created() {

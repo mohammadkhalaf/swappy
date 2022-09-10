@@ -5,7 +5,7 @@ import {
   signOut,
   signInWithEmailAndPassword,
 } from 'firebase/auth';
-import { doc, setDoc, getDoc } from 'firebase/firestore';
+import { doc, setDoc, getDoc, updateDoc } from 'firebase/firestore';
 import { db } from '@/db';
 export default {
   namespaced: true,
@@ -24,6 +24,9 @@ export default {
       state.error = null;
     },
     setUser(state, payload) {
+      state.user = payload;
+    },
+    updatedProfile(state, payload) {
       state.user = payload;
     },
   },
@@ -102,6 +105,13 @@ export default {
       } catch (error) {
         console.log(error);
       }
+    },
+    async updateUserProfile({ commit }, payload) {
+      console.log(payload);
+      const userRef = doc(db, 'users', payload.id);
+
+      await updateDoc(userRef, payload);
+      commit('updatedProfile', payload);
     },
   },
   getters: {
