@@ -15,11 +15,24 @@
         <div class="field">
           <label class="label">Title</label>
           <input v-model="form.title" class="input" type="text" />
+          <div v-if="v$.form.title.$error" class="error">
+            <span v-if="v$.form.title.required.$invalid">Title is require</span>
+          </div>
+          <div v-if="v$.form.title.$error" class="error">
+            <span v-if="v$.form.title.minLength.$invalid"
+              >Title must be at least 10 charachters long</span
+            >
+          </div>
         </div>
         <div class="field">
           <label class="label">Description</label>
           <textarea rows="5" v-model="form.description" class="textarea">
           </textarea>
+          <div v-if="v$.form.description.$error" class="error">
+            <span v-if="v$.form.description.required.$invalid"
+              >Description is require</span
+            >
+          </div>
         </div>
         <div class="field">
           <label class="label">Image Link</label>
@@ -28,10 +41,21 @@
         <div class="field">
           <label class="label">Price</label>
           <input v-model="form.price" class="input" type="number" />
+          <div v-if="v$.form.price.$error" class="error">
+            <span v-if="v$.form.price.required.$invalid">Price is require</span>
+          </div>
+          <div v-if="v$.form.price.$error" class="error">
+            <span v-if="v$.form.price.minValue.$invalid"
+              >Price must be at least 1$</span
+            >
+          </div>
         </div>
         <div class="field">
           <label class="label">City</label>
           <input v-model="form.city" class="input" type="text" />
+          <div v-if="v$.form.city.$error" class="error">
+            <span v-if="v$.form.city.required.$invalid">Title is require</span>
+          </div>
         </div>
 
         <div class="field">
@@ -48,7 +72,26 @@
 </template>
 
 <script>
+import useVuelidate from '@vuelidate/core';
+import { required, minLength, minValue } from '@vuelidate/validators';
 export default {
+  setup() {
+    return { v$: useVuelidate() };
+  },
+  validations() {
+    return {
+      form: {
+        title: { required, minLength: minLength(10) },
+        description: { required },
+        type: { required },
+        image: {},
+        price: { required, minValue: minValue(1) },
+
+        city: {},
+        tags: {},
+      },
+    };
+  },
   data() {
     return {
       form: {
@@ -64,8 +107,11 @@ export default {
     };
   },
   methods: {
-    createExchange() {
-      alert(JSON.stringify(this.form));
+    async createExchange() {
+      const isValid = await this.v$.$validate();
+      if (isValid) {
+        alert(JSON.stringify(this.form));
+      }
     },
   },
 };
@@ -74,7 +120,6 @@ export default {
 <style scoped>
 .page-wrapper {
   padding: 5rem;
-  border: 1px solid red;
 }
 .form-container {
   margin: 0 auto;
@@ -116,5 +161,9 @@ button {
   color: white;
   font-weight: 700;
   font-size: 1.7rem;
+}
+.error {
+  color: red;
+  margin-top: 0.5rem;
 }
 </style>

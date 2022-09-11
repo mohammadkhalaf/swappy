@@ -7,6 +7,7 @@ import {
 } from 'firebase/auth';
 import { doc, setDoc, getDoc, updateDoc } from 'firebase/firestore';
 import { db } from '@/db';
+
 export default {
   namespaced: true,
   state() {
@@ -112,6 +113,7 @@ export default {
 
       await updateDoc(userRef, payload);
       commit('updatedProfile', payload);
+
     },
   },
   getters: {
