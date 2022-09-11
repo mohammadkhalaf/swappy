@@ -16,6 +16,9 @@
         <li>
           <router-link to="/profile">Profile</router-link>
         </li>
+        <li>
+          <router-link to="/create">Create exchange</router-link>
+        </li>
         <li v-if="!isAuth">
           <router-link to="/register">Register</router-link>
         </li>

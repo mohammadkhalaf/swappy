@@ -2,7 +2,7 @@
   <section class="wrapper">
     <div class="column">
       <div>
-        <h2>Name</h2>
+        <h2>{{ isAuth.name }}</h2>
         <button @click="openModal">Update profile</button>
         <teleport to="body">
           <profile-modal
@@ -27,7 +27,9 @@
         <h2>recived</h2>
       </div>
       <div><h2>sent</h2></div>
-      <div><h2>credits</h2></div>
+      <div>
+        <h2>Credit: {{ isAuth.credit }}</h2>
+      </div>
     </div>
   </section>
 </template>

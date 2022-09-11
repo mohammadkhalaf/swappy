@@ -3,6 +3,7 @@ import HomePage from './pages/HomePage';
 import AboutPage from './pages/AboutPage';
 import RegisterPage from './pages/RegisterPage';
 import ProfilePage from './pages/ProfilePage';
+import CreateExchange from './pages/CreateExchange';
 import { getAuth } from 'firebase/auth';
 
 const router = createRouter({
@@ -10,6 +11,12 @@ const router = createRouter({
   routes: [
     { path: '/', component: HomePage, name: 'home' },
     { path: '/about', component: AboutPage, name: 'about' },
+    {
+      path: '/create',
+      component: CreateExchange,
+      name: 'create',
+      meta: { onlyAuth: true },
+    },
     {
       path: '/profile',
       component: ProfilePage,

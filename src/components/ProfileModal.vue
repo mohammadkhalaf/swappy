@@ -49,8 +49,8 @@ export default {
       this.$emit('closeOverlay');
     },
     updateProfile() {
-      console.log(this.userInfo);
       this.$store.dispatch('user/updateUserProfile', this.userInfo);
+      this.closeOverlay();
     },
   },
   created() {
