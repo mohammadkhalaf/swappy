@@ -18,6 +18,9 @@ export default {
 
       context.commit('setExchangs', data);
     },
+    async createExchanges(_, data) {
+      console.log(data);
+    },
   },
   mutations: {
     setExchangs(state, payload) {

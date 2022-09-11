@@ -60,7 +60,10 @@
 
         <div class="field">
           <label class="label">Tags</label>
-          <input v-model="form.tags" class="input" type="text" />
+          <input @input="handleTags" class="input" type="text" />
+          <div class="tags">
+            <span v-for="t in form.tags" :key="t"> {{ t }}</span>
+          </div>
         </div>
 
         <button type="button" @click="createExchange" class="button">
@@ -107,10 +110,39 @@ export default {
     };
   },
   methods: {
+    handleTags(event) {
+      const { value } = event.target;
+      if (
+        value &&
+        value.trim().length > 1 &&
+        (value.substr(-1) === ',' || value.substr(-1) === ' ')
+      ) {
+        const _value = value.split(',')[0].trim();
+        if (!this.form.tags.includes(_value)) {
+          this.form.tags.push(_value);
+        }
+        event.target.value = '';
+      }
+    },
+    clearForm() {
+      this.form = {
+        title: '',
+        description: '',
+        type: 'product',
+        image: '',
+        price: null,
+
+        city: '',
+        tags: [],
+      };
+    },
     async createExchange() {
       const isValid = await this.v$.$validate();
+
       if (isValid) {
-        alert(JSON.stringify(this.form));
+        this.v$.$reset();
+        this.$store.dispatch('exchanges/createExchanges', this.form);
+        this.clearForm();
       }
     },
   },
@@ -165,5 +197,16 @@ button {
 .error {
   color: red;
   margin-top: 0.5rem;
+}
+.tags {
+  display: flex;
+  margin-top: 0.5rem;
+}
+.tags span {
+  color: white;
+  background-color: orange;
+  border-radius: 0.4rem;
+  padding: 1rem;
+  margin-left: 0.5rem;
 }
 </style>
