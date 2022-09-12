@@ -1,5 +1,6 @@
 import { db } from '../../db/index';
 import { addDoc, collection, getDocs } from 'firebase/firestore';
+import slugify from 'slugify';
 
 export default {
   namespaced: true,
@@ -19,12 +20,21 @@ export default {
       context.commit('setExchangs', data);
     },
     async createExchanges({ rootState }, data) {
+      const numb = Math.floor(Math.random() * 10000);
       const id = rootState.user.user.id;
       // const userRef = doc(db, 'users', id);
       // console.log(id);
       // data.user = userRef;
       const created = await addDoc(collection(db, 'exchanges'), {
         ...data,
+        slug: slugify(`${data.title} ${numb}`, {
+          replacement: '-',
+
+          lower: false,
+          strict: false,
+
+          trim: true,
+        }),
         user: id,
         name: rootState.user.user.name,
       });

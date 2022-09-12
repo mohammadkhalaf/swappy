@@ -4,6 +4,7 @@ import AboutPage from './pages/AboutPage';
 import RegisterPage from './pages/RegisterPage';
 import ProfilePage from './pages/ProfilePage';
 import CreateExchange from './pages/CreateExchange';
+import ExchangeDetail from './pages/ExchangeDetail';
 import { getAuth } from 'firebase/auth';
 
 const router = createRouter({
@@ -16,6 +17,11 @@ const router = createRouter({
       component: CreateExchange,
       name: 'create',
       meta: { onlyAuth: true },
+    },
+    {
+      path: '/detail/:slug',
+      component: ExchangeDetail,
+      name: 'detail',
     },
     {
       path: '/profile',
