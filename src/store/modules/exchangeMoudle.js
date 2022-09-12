@@ -1,5 +1,5 @@
 import { db } from '../../db/index';
-import { addDoc, collection, getDocs } from 'firebase/firestore';
+import { addDoc, collection, getDocs, query, where } from 'firebase/firestore';
 import slugify from 'slugify';
 
 export default {
@@ -7,9 +7,16 @@ export default {
   state() {
     return {
       exchanges: [],
+      exchange: {},
     };
   },
   actions: {
+    async getSingleExchange({ commit }, slug) {
+      const q = query(collection(db, 'exchanges'), where('slug', '==', slug));
+      const querySnapshot = (await getDocs(q)).docs[0].data();
+
+      commit('setExchange', querySnapshot);
+    },
     async getExchanges(context) {
       const querySnapshot = await getDocs(collection(db, 'exchanges'));
 
@@ -46,10 +53,16 @@ export default {
     setExchangs(state, payload) {
       state.exchanges = payload;
     },
+    setExchange(state, payload) {
+      state.exchange = payload;
+    },
   },
   getters: {
     exchanges(state) {
       return state.exchanges;
+    },
+    exchange(state) {
+      return state.exchange;
     },
   },
 };

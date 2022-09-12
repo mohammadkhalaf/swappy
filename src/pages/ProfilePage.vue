@@ -5,11 +5,37 @@
         <h2>{{ isAuth.name }}</h2>
         <button @click="openModal">Update profile</button>
         <teleport to="body">
-          <profile-modal
+          <!-- <profile-modal
             :user="isAuth"
             @closeOverlay="closeOverlay"
             v-if="isOpen"
-          ></profile-modal>
+          ></profile-modal> -->
+          <modal-component
+            @closeOverlay="closeOverlay"
+            v-if="isOpen"
+            :isAuth="isAuth"
+          >
+            <form>
+              <h2>form of user</h2>
+              <div class="field">
+                <label class="title">Username</label>
+                <input v-model="isAuth.name" class="input" />
+              </div>
+
+              <div class="field">
+                <label class="title">Info about user</label>
+                <input class="input" />
+              </div>
+              <div class="field">
+                <label class="title">Your city</label>
+                <input v-model="isAuth.city" class="input" />
+              </div>
+              <div class="field">
+                <label class="title">Phone</label>
+                <input v-model="isAuth.phone" class="input" />
+              </div>
+            </form>
+          </modal-component>
         </teleport>
 
         <div class="item">
@@ -35,9 +61,10 @@
 </template>
 
 <script>
-import ProfileModal from '../components/ProfileModal.vue';
+// import ProfileModal from '../components/ProfileModal.vue';
+import ModalComponent from '../components/ModalComponent.vue';
 export default {
-  components: { ProfileModal },
+  components: { ModalComponent },
   data() {
     return {
       isOpen: false,
@@ -50,6 +77,15 @@ export default {
     closeOverlay() {
       this.isOpen = false;
     },
+    uppp() {
+      console.log('uppp');
+    },
+
+    // updateProfile() {
+    //   console.log('up');
+    //   // this.$store.dispatch('user/updateUserProfile', this.userInfo);
+    //   // this.closeOverlay();
+    // },
   },
   watch: {
     isAuth(auth) {

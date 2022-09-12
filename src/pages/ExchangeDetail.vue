@@ -2,27 +2,37 @@
   <section class="wrapper">
     <div class="header">
       <div class="col">
-        <h2>Tilte</h2>
-        <h3>type</h3>
-        <p>By: User</p>
+        <h2>{{ exchange.title }}</h2>
+        <h3>type {{ exchange.type }}</h3>
+        <p>By: {{ exchange.name }}</p>
       </div>
       <div class="col">
         <div>
           <img src="" alt="item image" />
-          <p>Price</p>
+          <p>{{ exchange.Price }}$</p>
           <button>Make exchange</button>
         </div>
       </div>
     </div>
     <div class="details">
-      <h1>City</h1>
+      <h1>{{ exchange.city }}</h1>
       <p>Detail</p>
     </div>
   </section>
 </template>
 
 <script>
-export default {};
+export default {
+  created() {
+    const { slug } = this.$route.params;
+    this.$store.dispatch('exchanges/getSingleExchange', slug);
+  },
+  computed: {
+    exchange() {
+      return this.$store.getters['exchanges/exchange'];
+    },
+  },
+};
 </script>
 
 <style scoped>
