@@ -1,5 +1,5 @@
 import { db } from '../../db/index';
-import { collection, getDocs } from 'firebase/firestore';
+import { addDoc, collection, getDocs } from 'firebase/firestore';
 
 export default {
   namespaced: true,
@@ -18,8 +18,18 @@ export default {
 
       context.commit('setExchangs', data);
     },
-    async createExchanges(_, data) {
-      console.log(data);
+    async createExchanges({ rootState }, data) {
+      const id = rootState.user.user.id;
+      // const userRef = doc(db, 'users', id);
+      // console.log(id);
+      // data.user = userRef;
+      const created = await addDoc(collection(db, 'exchanges'), {
+        ...data,
+        user: id,
+        name: rootState.user.user.name,
+      });
+
+      return created;
     },
   },
   mutations: {

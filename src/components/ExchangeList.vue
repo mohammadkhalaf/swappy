@@ -4,11 +4,12 @@
       <!-- {{ exchanges }} -->
       <div v-for="exchange in exchanges" :key="exchange.id" class="listitem">
         <img :src="exchange.image" :alt="exchange.title" class="img" />
+
         <div class="iteminfo">
           <div v-for="tag in exchange.tags" :key="tag">{{ tag }}</div>
           <h2>{{ exchange.title }}</h2>
           <div class="post-info">
-            <h3>{{ exchange.user }}</h3>
+            <h3>{{ exchange.name }}</h3>
             <p>22th Sep 2020</p>
           </div>
         </div>
@@ -21,6 +22,7 @@
 export default {
   computed: {
     exchanges() {
+      console.log(this.$store.getters['exchanges/exchanges']);
       return this.$store.getters['exchanges/exchanges'];
     },
   },

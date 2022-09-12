@@ -35,11 +35,9 @@ export default {
       return this.$route.path === '/' ? '' : 'coloredBG';
     },
     isAuth() {
-      console.log(this.$store.getters['user/isAuth']);
       return this.$store.getters['user/isAuth'];
     },
     getUser() {
-      console.log(this.$store.getters['user/getUser']);
       return this.$store.getters['user/getUser'];
     },
   },

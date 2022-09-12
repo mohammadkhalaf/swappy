@@ -113,7 +113,6 @@ export default {
 
       await updateDoc(userRef, payload);
       commit('updatedProfile', payload);
-
     },
   },
   getters: {

@@ -53,9 +53,6 @@ export default {
       this.closeOverlay();
     },
   },
-  created() {
-    console.log(this.userInfo);
-  },
 };
 </script>
 

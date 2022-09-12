@@ -2,6 +2,9 @@
   <div class="page-wrapper">
     <div class="form-container">
       <h2>What do you want to exchange</h2>
+
+      <p v-if="isLoading">loading</p>
+      <p v-if="msg">created !!</p>
       <form @submit.prevent="createExchange">
         <div class="field">
           <label class="label">Type</label>
@@ -107,6 +110,8 @@ export default {
         city: '',
         tags: [],
       },
+      isLoading: false,
+      msg: null,
     };
   },
   methods: {
@@ -140,10 +145,21 @@ export default {
       const isValid = await this.v$.$validate();
 
       if (isValid) {
+        this.isLoading = true;
         this.v$.$reset();
         this.$store.dispatch('exchanges/createExchanges', this.form);
+        this.msg = true;
+
         this.clearForm();
+        this.isLoading = false;
       }
+    },
+  },
+  watch: {
+    msg() {
+      setTimeout(() => {
+        this.msg = null;
+      }, 2500);
     },
   },
 };
