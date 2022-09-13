@@ -16,6 +16,7 @@ export default {
       const querySnapshot = (await getDocs(q)).docs[0].data();
 
       commit('setExchange', querySnapshot);
+      return querySnapshot;
     },
     async getExchanges(context) {
       const querySnapshot = await getDocs(collection(db, 'exchanges'));

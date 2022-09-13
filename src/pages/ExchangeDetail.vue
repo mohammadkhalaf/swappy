@@ -4,24 +4,27 @@
     v-if="isOpen"
     @closeModal="closeModal"
     :user="user"
+    :availableExchanges="userExchanges"
   ></exchange-modal>
   <section class="wrapper">
     <div class="header">
       <div class="col">
-        <h2>{{ exchange.title }}</h2>
-        <h3>type {{ exchange.type }}</h3>
-        <p>By: {{ exchange.name }}</p>
+        <h2>{{ exchange?.title }}</h2>
+        <h3>type {{ exchange?.type }}</h3>
+        <p>By: {{ exchange?.name }}</p>
       </div>
       <div class="col">
         <div>
           <img src="" alt="item image" />
-          <p>{{ exchange.Price }}$</p>
-          <button @click="openModal">Make exchange</button>
+          <p>{{ exchange?.price }}</p>
+          <button :disabled="!canCreateExchange" @click="openModal">
+            Make exchange
+          </button>
         </div>
       </div>
     </div>
     <div class="details">
-      <h1>{{ exchange.city }}</h1>
+      <h1>{{ exchange?.city }}</h1>
       <p>Detail</p>
     </div>
   </section>
@@ -40,7 +43,7 @@ export default {
   },
   created() {
     const { slug } = this.$route.params;
-
+    console.log(this.canCreateExchange);
     this.$store.dispatch('exchanges/getSingleExchange', slug);
   },
   computed: {
@@ -48,7 +51,13 @@ export default {
       return this.$store.getters['exchanges/exchange'];
     },
     user() {
-      return this.$store.getters['user/getUser'];
+      return this.$store.state.user.user;
+    },
+    userExchanges() {
+      return this.user?.exchanges || [];
+    },
+    canCreateExchange() {
+      return this.$store.getters['user/isAuth'];
     },
   },
   methods: {

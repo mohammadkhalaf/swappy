@@ -12,20 +12,20 @@
         <div class="field">
           Would you prefer to exchange credit ?
           <label class="checkbox is-large">
-            <input type="checkbox" v-model="checked" />
+            <input type="checkbox" v-model="isPriceExchange" />
             Yes
           </label>
         </div>
 
-        <div class="field disabled">
+        <div class="field">
           <label class="label">How Much Credit ?</label>
           <div class="control">
             <input
-              v-model="credit"
+              v-model="selectedPrice"
               class="input"
               type="number"
               placeholder="40"
-              :disabled="!checked"
+              :disabled="!isPriceExchange"
             />
             <i> You don't have enough of credit </i>
           </div>
@@ -34,21 +34,25 @@
           <label class="label">Exchange</label>
           <div class="control">
             <div class="select">
-              <select v-model="selected" :disabled="checked">
-                <option v-for="ex in user.exchanges" :value="ex" :key="ex.slug">
-                  {{ ex.title }}
+              <select v-model="selectedExchange" :disabled="isPriceExchange">
+                <option
+                  v-for="exchange in availableExchanges"
+                  :value="exchange"
+                  :key="exchange.slug"
+                >
+                  {{ exchange.title }}
                 </option>
               </select>
             </div>
           </div>
         </div>
 
-        <div v-if="selected">
+        <div v-if="offerdPrice">
           Your price is:
-          <span class="deal-highlight">{{ selected.price }}</span>
+          <span class="deal-highlight">{{ offerdPrice }}</span>
         </div>
-        <div class="price price">You are offering the exact same amount</div>
-        <i>Allowed difference is not less than 20%</i>
+
+        <div class="price price">{{ priceDiffrenceText }}</div>
       </div>
     </div>
 
@@ -62,27 +66,57 @@ export default {
   props: {
     exchange: {
       type: Object,
-      user: Object,
     },
+    availableExchanges: {
+      type: Array,
+    },
+    // user: Object,
   },
   data() {
     return {
-      credit: null,
-      checked: false,
-      selected: null,
-      exchanges: null,
+      selectedPrice: null,
+      isPriceExchange: false,
+      selectedExchange: null,
     };
   },
-  // created() {
-  //   console.log(this.$store.getters['user/getUser']);
-  // },
-  // created() {
-  //   this.exchangex =   this.$store.getters['user/getUser'].exchanges || [];
-  //   console.log(this.$store.getters['user/getUser']);
-  // },
+  watch: {
+    isPriceExchange(value) {
+      if (value) {
+        this.selectedExchange = null;
+      } else {
+        this.selectedPrice = null;
+      }
+    },
+  },
+
   computed: {
-    user() {
-      return this.$store.getters['user/getUser'];
+    offerdPrice() {
+      if (this.isPriceExchange) {
+        return this.selectedPrice;
+      } else if (this.selectedExchange) {
+        return this.selectedExchange.price;
+      }
+      return null;
+    },
+    dealDiffrence() {
+      if (!this.offerdPrice) {
+        return null;
+      }
+      const priceDiffrence = this.offerdPrice - this.exchange.price;
+      return ((priceDiffrence / this.exchange.price) * 100).toFixed(2);
+    },
+    priceDiffrenceText() {
+      if (this.dealDiffrence === '' || this.dealDiffrence === '') {
+        return '';
+      } else if (this.dealDiffrence === 0) {
+        return 'You are offering the same price';
+      }
+      const diffrenceText = this.dealDiffrence > 0 ? 'higher' : 'lower';
+      const roundedDiff = Math.round(this.dealDiffrence * 100) / 100;
+
+      return `The offered price is ${Math.abs(
+        roundedDiff
+      )}% ${diffrenceText} than the actual price `;
     },
   },
 
