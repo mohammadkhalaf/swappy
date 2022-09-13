@@ -5,7 +5,16 @@ import {
   signOut,
   signInWithEmailAndPassword,
 } from 'firebase/auth';
-import { doc, setDoc, getDoc, updateDoc } from 'firebase/firestore';
+import {
+  doc,
+  setDoc,
+  getDoc,
+  updateDoc,
+  query,
+  collection,
+  where,
+  getDocs,
+} from 'firebase/firestore';
 import { db } from '@/db';
 
 export default {
@@ -25,6 +34,7 @@ export default {
       state.error = null;
     },
     setUser(state, payload) {
+      console.log(payload);
       state.user = payload;
     },
     updatedProfile(state, payload) {
@@ -46,9 +56,24 @@ export default {
     },
     async getUserProfile({ commit }, user) {
       const docRef = doc(db, 'users', user.uid);
+
       const docSnap = await getDoc(docRef);
       const userProfile = docSnap.data();
-      commit('setUser', userProfile);
+      const q = query(
+        collection(db, 'exchanges'),
+        where('user', '==', user.uid)
+      );
+
+      const querySnap = await getDocs(q);
+      const exchanges = querySnap.docs.map((d) => d.data());
+
+      const useWithProfile = {
+        id: user.uid,
+        email: user.email,
+        ...userProfile,
+        exchanges,
+      };
+      commit('setUser', useWithProfile);
     },
     async register({ commit, dispatch }, payload) {
       const { email, password, name } = payload;

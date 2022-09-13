@@ -1,5 +1,10 @@
 <template>
-  <exchange-modal v-if="isOpen" @closeModal="closeModal"></exchange-modal>
+  <exchange-modal
+    :exchange="exchange"
+    v-if="isOpen"
+    @closeModal="closeModal"
+    :user="user"
+  ></exchange-modal>
   <section class="wrapper">
     <div class="header">
       <div class="col">
@@ -35,11 +40,15 @@ export default {
   },
   created() {
     const { slug } = this.$route.params;
+
     this.$store.dispatch('exchanges/getSingleExchange', slug);
   },
   computed: {
     exchange() {
       return this.$store.getters['exchanges/exchange'];
+    },
+    user() {
+      return this.$store.getters['user/getUser'];
     },
   },
   methods: {
