@@ -8,12 +8,12 @@ import {
 import {
   doc,
   setDoc,
-  getDoc,
   updateDoc,
-  query,
-  collection,
-  where,
-  getDocs,
+  getDoc,
+  // query,
+  // collection,
+  // where,
+  // getDocs,
 } from 'firebase/firestore';
 import { db } from '@/db';
 
@@ -34,7 +34,6 @@ export default {
       state.error = null;
     },
     setUser(state, payload) {
-      console.log(payload);
       state.user = payload;
     },
     updatedProfile(state, payload) {
@@ -45,6 +44,7 @@ export default {
   actions: {
     onauthchangeHandler({ dispatch }, cb) {
       onAuthStateChanged(getAuth(), async (user) => {
+        console.log(user);
         if (user) {
           await dispatch('getUserProfile', user);
           cb(user);
@@ -59,24 +59,19 @@ export default {
 
       const docSnap = await getDoc(docRef);
       const userProfile = docSnap.data();
-      const q = query(
-        collection(db, 'exchanges'),
-        where('user', '==', user.uid)
-      );
-
-      const querySnap = await getDocs(q);
-      const exchanges = querySnap.docs.map((d) => d.data());
-
       const useWithProfile = {
         id: user.uid,
         email: user.email,
         ...userProfile,
-        exchanges,
       };
+      // const q = query(collection(db, 'exchanges'), where('user', '==', id));
+
+      // const querySnap = await getDocs(q);
+      // const exchanges = querySnap.docs.map((d) => d.data());
+
       commit('setUser', useWithProfile);
     },
-    async register({ commit, dispatch }, payload) {
-      const { email, password, name } = payload;
+    async register({ commit, dispatch }, { email, password, name }) {
       try {
         const auth = getAuth();
         const { user } = await createUserWithEmailAndPassword(
@@ -84,11 +79,19 @@ export default {
           email,
           password
         );
+        console.log(user);
+        await dispatch('createUserProfile', {
+          id: user.uid,
+          name,
+          exchanges: [],
+          credit: 0,
+        });
 
-        user.displayName = name;
-        user.exchanges = [];
-        dispatch('createUserProfile', user);
-        return user;
+        // user.displayName = name;
+        // user.exchanges = [];
+        // user.id = user.uid;
+        // console.log(user);
+        // return user;
       } catch (error) {
         commit('setError', error.message);
         dispatch('remvoeAlert');
@@ -98,26 +101,15 @@ export default {
       const { email, password } = data;
 
       try {
-        const { user } = await signInWithEmailAndPassword(
-          getAuth(),
-          email,
-          password
-        );
-
-        return user;
+        await signInWithEmailAndPassword(getAuth(), email, password);
       } catch (error) {
         commit('setError', error.message);
         dispatch('remvoeAlert');
       }
     },
-    async createUserProfile(_, user) {
-      await setDoc(doc(db, 'users', user.uid), {
-        name: user.displayName,
-        exchanges: user.exchanges,
-        email: user.email,
-        id: user.uid,
-        credit: 0,
-      });
+    async createUserProfile(_, { id, ...profile }) {
+      console.log(id, profile);
+      await setDoc(doc(db, 'users', id), { id, profile });
     },
     async remvoeAlert({ commit }) {
       setTimeout(() => {

@@ -148,6 +148,7 @@ export default {
         this.isLoading = true;
         this.v$.$reset();
         this.$store.dispatch('exchanges/createExchanges', this.form);
+        // this.$store.dispatch('user/getUserProfile', this.form);
         this.msg = true;
 
         this.clearForm();

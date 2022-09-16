@@ -1,5 +1,12 @@
 import { db } from '../../db/index';
-import { addDoc, collection, getDocs, query, where } from 'firebase/firestore';
+import {
+  addDoc,
+  collection,
+  collectionGroup,
+  getDocs,
+  query,
+  where,
+} from 'firebase/firestore';
 import slugify from 'slugify';
 
 export default {
@@ -19,13 +26,14 @@ export default {
       return querySnapshot;
     },
     async getExchanges(context) {
-      const querySnapshot = await getDocs(collection(db, 'exchanges'));
+      const q = query(collectionGroup(db, 'exchanges'));
+      const querySnapshot = await getDocs(q);
 
-      const data = querySnapshot.docs.map((doc) => {
+      const exchanges = querySnapshot.docs.map((doc) => {
         return { id: doc.id, ...doc.data() };
       });
 
-      context.commit('setExchangs', data);
+      context.commit('setExchangs', exchanges);
     },
     async createExchanges({ rootState }, data) {
       const numb = Math.floor(Math.random() * 10000);
