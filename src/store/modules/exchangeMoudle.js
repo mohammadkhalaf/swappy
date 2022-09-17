@@ -1,11 +1,15 @@
 import { db } from '../../db/index';
 import {
   addDoc,
+  // addDoc,
   collection,
   collectionGroup,
+  doc,
   getDocs,
   query,
   where,
+  getDoc,
+  // where,
 } from 'firebase/firestore';
 import slugify from 'slugify';
 
@@ -19,11 +23,18 @@ export default {
   },
   actions: {
     async getSingleExchange({ commit }, slug) {
-      const q = query(collection(db, 'exchanges'), where('slug', '==', slug));
-      const querySnapshot = (await getDocs(q)).docs[0].data();
+      commit('setExchange', {});
+      const docQuery = query(
+        collection(db, 'exchanges'),
+        where('slug', '==', slug)
+      );
+      const querySnap = await getDocs(docQuery);
+      const exchange = querySnap.docs[0].data();
+      const userSnap = await (await getDoc(exchange.user)).data();
 
-      commit('setExchange', querySnapshot);
-      return querySnapshot;
+      exchange.user = userSnap;
+
+      commit('setExchange', exchange);
     },
     async getExchanges(context) {
       const q = query(collectionGroup(db, 'exchanges'));
@@ -36,26 +47,14 @@ export default {
       context.commit('setExchangs', exchanges);
     },
     async createExchanges({ rootState }, data) {
-      const numb = Math.floor(Math.random() * 10000);
-      const id = rootState.user.user.id;
-      // const userRef = doc(db, 'users', id);
-      // console.log(id);
-      // data.user = userRef;
-      const created = await addDoc(collection(db, 'exchanges'), {
-        ...data,
-        slug: slugify(`${data.title} ${numb}`, {
-          replacement: '-',
-
-          lower: false,
-          strict: false,
-
-          trim: true,
-        }),
-        user: id,
-        name: rootState.user.user.name,
+      const userRef = doc(db, 'users', rootState.user.user.id);
+      data.user = userRef;
+      data.slug = slugify(`${data.title} ${Date.now()}`, {
+        lower: true,
+        strict: true,
       });
 
-      return created;
+      await addDoc(collection(db, 'exchanges'), data);
     },
   },
   mutations: {

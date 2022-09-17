@@ -6,12 +6,12 @@
     :user="user"
     :availableExchanges="userExchanges"
   ></exchange-modal>
-  <section class="wrapper">
+  <section v-if="exchange && exchange.slug" class="wrapper">
     <div class="header">
       <div class="col">
         <h2>{{ exchange?.title }}</h2>
         <h3>type {{ exchange?.type }}</h3>
-        <p>By: {{ exchange?.name }}</p>
+        <p>By: {{ user?.name }}</p>
       </div>
       <div class="col">
         <div>
@@ -43,7 +43,6 @@ export default {
   },
   created() {
     const { slug } = this.$route.params;
-    console.log(this.canCreateExchange);
     this.$store.dispatch('exchanges/getSingleExchange', slug);
   },
   computed: {
@@ -51,7 +50,7 @@ export default {
       return this.$store.getters['exchanges/exchange'];
     },
     user() {
-      return this.$store.state.user.user;
+      return this.exchange.user;
     },
     userExchanges() {
       return this.user?.exchanges || [];

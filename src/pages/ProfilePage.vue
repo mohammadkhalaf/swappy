@@ -88,7 +88,7 @@ export default {
     // },
   },
   watch: {
-    isAuth(auth) {
+    user(auth) {
       if (!auth) {
         this.$router.push('/');
       }

@@ -37,14 +37,13 @@ export default {
       state.user = payload;
     },
     updatedProfile(state, payload) {
-      state.user = payload;
+      state.user = { ...state.user, ...payload };
     },
   },
 
   actions: {
     onauthchangeHandler({ dispatch }, cb) {
       onAuthStateChanged(getAuth(), async (user) => {
-        console.log(user);
         if (user) {
           await dispatch('getUserProfile', user);
           cb(user);
@@ -64,10 +63,6 @@ export default {
         email: user.email,
         ...userProfile,
       };
-      // const q = query(collection(db, 'exchanges'), where('user', '==', id));
-
-      // const querySnap = await getDocs(q);
-      // const exchanges = querySnap.docs.map((d) => d.data());
 
       commit('setUser', useWithProfile);
     },
@@ -109,7 +104,7 @@ export default {
     },
     async createUserProfile(_, { id, ...profile }) {
       console.log(id, profile);
-      await setDoc(doc(db, 'users', id), { id, profile });
+      await setDoc(doc(db, 'users', id), { id, ...profile });
     },
     async remvoeAlert({ commit }) {
       setTimeout(() => {
