@@ -3,7 +3,7 @@
     :exchange="exchange"
     v-if="isOpen"
     @closeModal="closeModal"
-    :user="user"
+    :user="exchangeUser"
     :availableExchanges="userExchanges"
   ></exchange-modal>
   <section v-if="exchange && exchange.slug" class="wrapper">
@@ -11,15 +11,21 @@
       <div class="col">
         <h2>{{ exchange?.title }}</h2>
         <h3>type {{ exchange?.type }}</h3>
-        <p>By: {{ user?.name }}</p>
+        <p>By: {{ exchangeUser?.name }}</p>
       </div>
       <div class="col">
         <div>
           <img src="" alt="item image" />
           <p>{{ exchange?.price }}</p>
-          <button :disabled="!canCreateExchange" @click="openModal">
+
+          <button
+            v-if="canCreateExchange"
+            :disabled="isOwner"
+            @click="openModal"
+          >
             Make exchange
           </button>
+          <router-link v-else to="/register"> Login to exchange</router-link>
         </div>
       </div>
     </div>
@@ -45,18 +51,25 @@ export default {
     const { slug } = this.$route.params;
     this.$store.dispatch('exchanges/getSingleExchange', slug);
   },
+
   computed: {
     exchange() {
       return this.$store.getters['exchanges/exchange'];
     },
-    user() {
+    exchangeUser() {
       return this.exchange.user;
+    },
+    user() {
+      return this.$store.getters['user/getUser'];
     },
     userExchanges() {
       return this.user?.exchanges || [];
     },
     canCreateExchange() {
       return this.$store.getters['user/isAuth'];
+    },
+    isOwner() {
+      return this.exchange.user.id === this.user.id;
     },
   },
   methods: {

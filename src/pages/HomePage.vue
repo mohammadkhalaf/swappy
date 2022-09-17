@@ -11,6 +11,14 @@ export default {
     ExchangeList,
     HeroSection,
   },
+  created() {
+    this.user && this.$store.dispatch('user/getUserProfile', this.user);
+  },
+  computed: {
+    user() {
+      return this.$store.getters['user/getUser'];
+    },
+  },
 };
 </script>
 

@@ -10,6 +10,10 @@ import {
   setDoc,
   updateDoc,
   getDoc,
+  query,
+  collection,
+  where,
+  getDocs,
   // query,
   // collection,
   // where,
@@ -45,6 +49,7 @@ export default {
     onauthchangeHandler({ dispatch }, cb) {
       onAuthStateChanged(getAuth(), async (user) => {
         if (user) {
+          user.id = user.uid;
           await dispatch('getUserProfile', user);
           cb(user);
         } else {
@@ -54,14 +59,21 @@ export default {
       });
     },
     async getUserProfile({ commit }, user) {
-      const docRef = doc(db, 'users', user.uid);
+      const docRef = doc(db, 'users', user.id);
 
       const docSnap = await getDoc(docRef);
       const userProfile = docSnap.data();
+      const docQuery = query(
+        collection(db, 'exchanges'),
+        where('user', '==', docRef)
+      );
+      const querySnap = await getDocs(docQuery);
+      const exchanges = querySnap.docs.map((d) => d.data());
       const useWithProfile = {
         id: user.uid,
         email: user.email,
         ...userProfile,
+        exchanges,
       };
 
       commit('setUser', useWithProfile);
@@ -81,12 +93,6 @@ export default {
           exchanges: [],
           credit: 0,
         });
-
-        // user.displayName = name;
-        // user.exchanges = [];
-        // user.id = user.uid;
-        // console.log(user);
-        // return user;
       } catch (error) {
         commit('setError', error.message);
         dispatch('remvoeAlert');

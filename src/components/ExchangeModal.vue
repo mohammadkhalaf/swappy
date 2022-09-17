@@ -2,7 +2,7 @@
   <div class="overlay" @click="closeModal"></div>
   <dialog open>
     <div class="deal">
-      <h2>{{ exchange.name }}</h2>
+      <h2>{{ exchange.user.name }}</h2>
       <div class="deal-wrapper">
         <div>Offering {{ exchange.type }}</div>
         <div>{{ exchange.title }}</div>
@@ -30,7 +30,7 @@
             <i> You don't have enough of credit </i>
           </div>
         </div>
-        <div class="field disabled">
+        <div class="field">
           <label class="label">Exchange</label>
           <div class="control">
             <div class="select">
