@@ -31,8 +31,10 @@ export default {
       const querySnap = await getDocs(docQuery);
       const exchange = querySnap.docs[0].data();
       const userSnap = await (await getDoc(exchange.user)).data();
+      exchange.id = querySnap.docs[0].id;
 
       exchange.user = userSnap;
+      console.log(exchange);
 
       commit('setExchange', exchange);
     },
@@ -47,6 +49,7 @@ export default {
       context.commit('setExchangs', exchanges);
     },
     async createExchanges({ rootState }, data) {
+      console.log(data);
       const userRef = doc(db, 'users', rootState.user.user.id);
       data.user = userRef;
       data.slug = slugify(`${data.title} ${Date.now()}`, {

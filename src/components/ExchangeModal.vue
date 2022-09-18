@@ -70,7 +70,7 @@ export default {
     availableExchanges: {
       type: Array,
     },
-    // user: Object,
+    user: Object,
   },
   data() {
     return {
@@ -125,7 +125,20 @@ export default {
       this.$emit('closeModal');
     },
     submitDeal() {
-      console.log(this.credit);
+      const deal = {
+        title: this.exchange.title,
+        fromUser: { name: this.user.name, id: this.user.id },
+        exchangedFor: null,
+        exchangedTo: this.exchange?.id,
+        toUser: this.exchange.user,
+        price: null,
+      };
+      if (this.isPriceExchange) {
+        deal.price = this.selectedPrice;
+      } else {
+        deal.exchangedFor = this.selectedExchange;
+      }
+      this.$store.dispatch('deals/createDeal', deal);
     },
   },
 };

@@ -68,7 +68,10 @@ export default {
         where('user', '==', docRef)
       );
       const querySnap = await getDocs(docQuery);
-      const exchanges = querySnap.docs.map((d) => d.data());
+      const exchanges = querySnap.docs.map((d) => {
+        return { ...d.data(), id: d.id };
+      });
+
       const useWithProfile = {
         id: user.uid,
         email: user.email,

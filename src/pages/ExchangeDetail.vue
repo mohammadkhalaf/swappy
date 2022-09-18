@@ -3,7 +3,7 @@
     :exchange="exchange"
     v-if="isOpen"
     @closeModal="closeModal"
-    :user="exchangeUser"
+    :user="user"
     :availableExchanges="userExchanges"
   ></exchange-modal>
   <section v-if="exchange && exchange.slug" class="wrapper">
