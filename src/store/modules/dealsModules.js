@@ -1,15 +1,79 @@
-import { doc, Timestamp, addDoc, collection } from 'firebase/firestore';
+import {
+  doc,
+  Timestamp,
+  addDoc,
+  collection,
+  query,
+  where,
+  getDocs,
+  getDoc,
+  // getDoc,
+  // getDoc,
+} from 'firebase/firestore';
 import { db } from '@/db';
+
+const datafromDeal = async (deal, id) => {
+  if (deal.exchangedFor) {
+    const exchangedForDoc = await getDoc(deal.exchangedFor);
+    deal.exchangedFor = { ...exchangedForDoc.data(), id: exchangedForDoc.id };
+  }
+  const toExchangeDoc = await getDoc(deal.toExchange);
+  deal.toExchange = { ...toExchangeDoc.data(), id: toExchangeDoc.id };
+
+  const fromUserDoc = await getDoc(deal.fromUser);
+  deal.fromUser = { ...fromUserDoc.data(), id: fromUserDoc.id };
+  deal.id = id;
+
+  return deal;
+};
 
 export default {
   namespaced: true,
   state() {
     return {
-      deals: [],
-      deal: {},
+      receivedDeals: [],
+      sentDeals: [],
     };
   },
   actions: {
+    async getDeals({ rootState, commit }) {
+      const userId = rootState.user.user.id;
+
+      if (!userId) {
+        //do something else
+      }
+
+      const dealsQuery = query(
+        collection(db, 'deals'),
+        where('toUser', '==', doc(db, 'users', userId))
+      );
+      const dealsSnapshots = await getDocs(dealsQuery);
+
+      const deals = await Promise.all(
+        dealsSnapshots.docs.map((d) => datafromDeal(d.data(), d.id))
+      );
+      // const deals = dealsSnapshots.docs.map((d) => {
+      //   return { ...d.data(), id: d.id };
+      // });
+
+      // const userRef = deals.map((d) => {
+      //   return d.fromUser;
+      // });
+      // console.log(userRef.firestore);
+      //  const user=
+
+      // deals.fromUser = 'hello ';
+
+      // const fromUser = deals[0].fromUser;
+
+      // const userRef = doc(db, 'users', fromUser.id);
+      // const userSnap = (await getDoc(userRef)).data();
+      // console.log(userSnap);
+
+      console.log(deals);
+      commit('setreceivedDeals', deals);
+    },
+
     async createDeal(_, payload) {
       console.log(payload);
       const deal = {
@@ -28,13 +92,13 @@ export default {
     },
   },
   mutations: {
-    setDeals(state, payload) {
-      console.log(payload);
+    setreceivedDeals(state, payload) {
+      state.receivedDeals = payload;
     },
   },
   getters: {
-    getDeals(state) {
-      console.log(state);
+    getReceivedDeals(state) {
+      return state.receivedDeals;
     },
   },
 };

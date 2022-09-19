@@ -50,11 +50,19 @@
     </div>
     <div class="column">
       <div>
-        <h2>recived</h2>
+        <h2>recived : {{ receivedDeals.length }}</h2>
       </div>
       <div><h2>sent</h2></div>
       <div>
         <h2>Credit: {{ isAuth.credit }}</h2>
+      </div>
+      <div class="deals" v-for="deal in receivedDeals" :key="deal.id">
+        <div class="deal">
+          <img src="" alt="" />
+          <h3>
+            {{ deal.title }} for {{ deal.price || deal.exchangedFor.title }}
+          </h3>
+        </div>
       </div>
     </div>
   </section>
@@ -80,12 +88,9 @@ export default {
     uppp() {
       console.log('uppp');
     },
-
-    // updateProfile() {
-    //   console.log('up');
-    //   // this.$store.dispatch('user/updateUserProfile', this.userInfo);
-    //   // this.closeOverlay();
-    // },
+    contact() {
+      return <a href='mailto:webmaster@example.com'>Jon Doe</a>;
+    },
   },
   watch: {
     user(auth) {
@@ -94,9 +99,19 @@ export default {
       }
     },
   },
+  created() {
+    this.$store.dispatch('deals/getDeals');
+    console.log(this.receivedDeals);
+  },
   computed: {
+    emailLink(x) {
+      return 'mailto:' + x;
+    },
     isAuth() {
       return this.$store.getters['user/getUser'];
+    },
+    receivedDeals() {
+      return this.$store.getters['deals/getReceivedDeals'];
     },
   },
 };

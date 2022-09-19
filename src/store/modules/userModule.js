@@ -95,6 +95,7 @@ export default {
           name,
           exchanges: [],
           credit: 0,
+          email,
         });
       } catch (error) {
         commit('setError', error.message);
