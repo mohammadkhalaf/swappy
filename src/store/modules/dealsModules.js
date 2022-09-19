@@ -52,28 +52,30 @@ export default {
       const deals = await Promise.all(
         dealsSnapshots.docs.map((d) => datafromDeal(d.data(), d.id))
       );
-      // const deals = dealsSnapshots.docs.map((d) => {
-      //   return { ...d.data(), id: d.id };
-      // });
-
-      // const userRef = deals.map((d) => {
-      //   return d.fromUser;
-      // });
-      // console.log(userRef.firestore);
-      //  const user=
-
-      // deals.fromUser = 'hello ';
-
-      // const fromUser = deals[0].fromUser;
-
-      // const userRef = doc(db, 'users', fromUser.id);
-      // const userSnap = (await getDoc(userRef)).data();
-      // console.log(userSnap);
 
       console.log(deals);
       commit('setreceivedDeals', deals);
     },
+    async getSentDeals({ rootState, commit }) {
+      const userId = rootState.user.user.id;
 
+      if (!userId) {
+        //do something else
+      }
+
+      const dealsQuery = query(
+        collection(db, 'deals'),
+        where('fromUser', '==', doc(db, 'users', userId))
+      );
+      const dealsSnapshots = await getDocs(dealsQuery);
+
+      const deals = await Promise.all(
+        dealsSnapshots.docs.map((d) => datafromDeal(d.data(), d.id))
+      );
+
+      console.log(deals);
+      commit('setSentDeals', deals);
+    },
     async createDeal(_, payload) {
       console.log(payload);
       const deal = {
@@ -82,6 +84,7 @@ export default {
         toUser: doc(db, 'users', payload.toUser.id),
         fromUser: doc(db, 'users', payload.fromUser.id),
         toExchange: doc(db, 'exchanges', payload.exchangedTo),
+        status: 'Pending',
       };
       if (payload.exchangedFor) {
         deal.exchangedFor = doc(db, 'exchanges', payload.exchangedFor.id);
@@ -95,10 +98,16 @@ export default {
     setreceivedDeals(state, payload) {
       state.receivedDeals = payload;
     },
+    setSentDeals(state, payload) {
+      state.sentDeals = payload;
+    },
   },
   getters: {
     getReceivedDeals(state) {
       return state.receivedDeals;
+    },
+    getSentDeals(state) {
+      return state.sentDeals;
     },
   },
 };

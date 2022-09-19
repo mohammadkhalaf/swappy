@@ -4,7 +4,8 @@
       <!-- {{ exchanges }} -->
       <div v-for="exchange in exchanges" :key="exchange.id" class="listitem">
         <router-link :to="{ name: 'detail', params: { slug: exchange.slug } }">
-          <img :src="exchange.image" class="img" />
+          <img v-if="exchange.image" :src="exchange.image" class="img" />
+          <img v-else src="../assets/img/noimage.gif" alt="" class="img" />
 
           <div class="iteminfo">
             <div v-for="tag in exchange.tags" :key="tag">{{ tag }}</div>
@@ -15,7 +16,6 @@
             </div>
           </div>
         </router-link>
-        <img :src="defaultImage" alt="" />
       </div>
     </div>
     {{ defaultImage }}
