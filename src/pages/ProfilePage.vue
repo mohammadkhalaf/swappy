@@ -2,8 +2,9 @@
   <div class="container">
     <section class="wrapper">
       <div class="column">
+        >
         <div>
-          <h2>{{ isAuth.name }}</h2>
+          <h2>{{ isAuth?.name }}</h2>
           <button @click="openModal">Update profile</button>
           <teleport to="body">
             <!-- <profile-modal
@@ -45,10 +46,10 @@
           @click="setTab('received')"
           :class="{ active: openTab === 'received' }"
         >
-          <h2>recived : {{ receivedDeals?.length }}</h2>
+          <h2>recived : {{ isAuth && receivedDeals?.length }}</h2>
         </div>
         <div @click="setTab('sent')" :class="{ active: openTab === 'sent' }">
-          <h2>sent :{{ sentDeals?.length }}</h2>
+          <h2>sent :{{ isAuth && sentDeals?.length }}</h2>
         </div>
         <div>
           <h2>Credit: {{ isAuth?.credit }}</h2>
@@ -65,7 +66,7 @@
         <div class="deals" v-for="deal in receivedDeals" :key="deal.id">
           <div class="deal">
             <img
-              v-if="deal.exchangedFor.image"
+              v-if="deal.exchangedFor"
               :src="deal.exchangedFor.image"
               alt=""
               class="img"
@@ -76,7 +77,15 @@
               {{ deal.price || deal.exchangedFor.title }}
             </h3>
             <p class="status">status {{ deal.status }}</p>
-            <button class="btn">Check a deal</button>
+            <teleport to="body">
+              <deal-modal
+                :receivedDeals="receivedDeals"
+                @close-modal="closeDealModal"
+                v-if="dealModalOpen"
+              ></deal-modal>
+            </teleport>
+            <p>{{ deal.fromUser.email }}</p>
+            <button class="btn" @click="openDealModal">Check a deal</button>
           </div>
         </div>
       </div>
@@ -84,7 +93,7 @@
         <div class="deals" v-for="deal in sentDeals" :key="deal.id">
           <div class="deal">
             <img
-              v-if="deal.exchangedFor.image"
+              v-if="deal.exchangedFor"
               :src="deal.exchangedFor.image"
               alt=""
               class="img"
@@ -94,8 +103,23 @@
               {{ deal.title }} for
               {{ deal.price || deal.exchangedFor.title }}
             </h3>
-            <button class="btn">Check a deal</button>
+            <p v-if="deal.status === 'accepted'">
+              {{ deal.toUser.name }} has accepted the deal. Send
+              {{ deal.toUser.name }} email at {{ deal.toUser.email }}
+            </p>
+            <p v-if="deal.status === 'declined'">
+              {{ deal.toUser.name }} has declined the deal
+            </p>
+
+            <button class="btn" @click="openDealModal">Check a deal</button>
             <p class="status">status {{ deal.status }}</p>
+            <teleport to="body">
+              <deal-modal
+                :sentDeals="sentDeals"
+                @close-modal="closeDealModal"
+                v-if="dealModalOpen"
+              ></deal-modal>
+            </teleport>
           </div>
         </div>
       </div>
@@ -106,12 +130,14 @@
 <script>
 // import ProfileModal from '../components/ProfileModal.vue';
 import ModalComponent from '../components/ModalComponent.vue';
+import DealModal from '../components/DealModal.vue';
 export default {
-  components: { ModalComponent },
+  components: { ModalComponent, DealModal },
   data() {
     return {
       isOpen: false,
       openTab: 'received',
+      dealModalOpen: false,
     };
   },
   methods: {
@@ -121,14 +147,17 @@ export default {
     openModal() {
       this.isOpen = true;
     },
+    openDealModal() {
+      this.dealModalOpen = true;
+    },
     closeOverlay() {
       this.isOpen = false;
     },
+    closeDealModal() {
+      this.dealModalOpen = false;
+    },
     uppp() {
       console.log('uppp');
-    },
-    contact() {
-      return <a href='mailto:webmaster@example.com'>Jon Doe</a>;
     },
   },
   watch: {
@@ -143,6 +172,10 @@ export default {
     this.$store.dispatch('deals/getSentDeals');
   },
   computed: {
+    cotnact(x) {
+      console.log(x);
+      return 'mailto: ' + x;
+    },
     isAuth() {
       return this.$store.getters['user/getUser'];
     },

@@ -7,8 +7,8 @@ import {
   where,
   getDocs,
   getDoc,
-  // getDoc,
-  // getDoc,
+  updateDoc,
+  // updateDoc,
 } from 'firebase/firestore';
 import { db } from '@/db';
 
@@ -21,7 +21,10 @@ const datafromDeal = async (deal, id) => {
   deal.toExchange = { ...toExchangeDoc.data(), id: toExchangeDoc.id };
 
   const fromUserDoc = await getDoc(deal.fromUser);
+
   deal.fromUser = { ...fromUserDoc.data(), id: fromUserDoc.id };
+  const toUserDoc = await getDoc(deal.toUser);
+  deal.toUser = { ...toUserDoc.data(), id: toUserDoc.id };
   deal.id = id;
 
   return deal;
@@ -36,6 +39,18 @@ export default {
     };
   },
   actions: {
+    async acceptDeal({ commit }, payload) {
+      const dealRef = doc(db, 'deals', payload.id);
+      // const dealSnap = (await getDoc(dealRef)).data();
+      await updateDoc(dealRef, { status: 'accepted' });
+      commit('changeStatus', { id: payload.id, status: 'accepted' });
+    },
+    async declineDeal({ commit }, payload) {
+      const dealRef = doc(db, 'deals', payload.id);
+      // const dealSnap = (await getDoc(dealRef)).data();
+      await updateDoc(dealRef, { status: 'declined' });
+      commit('changeStatus', { id: payload.id, status: 'declined' });
+    },
     async getDeals({ rootState, commit }) {
       const userId = rootState.user.user.id;
 
@@ -100,6 +115,10 @@ export default {
     },
     setSentDeals(state, payload) {
       state.sentDeals = payload;
+    },
+    changeStatus(state, { id, status }) {
+      const index = state.receivedDeals.findIndex((d) => d.id === id);
+      state.receivedDeals[index].status = status;
     },
   },
   getters: {
