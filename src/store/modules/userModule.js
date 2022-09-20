@@ -43,6 +43,9 @@ export default {
     updatedProfile(state, payload) {
       state.user = { ...state.user, ...payload };
     },
+    updateCredit(state, credit) {
+      state.user.credit += credit;
+    },
   },
 
   actions: {

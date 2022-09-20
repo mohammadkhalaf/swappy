@@ -53,10 +53,13 @@
         </div>
 
         <div class="price price">{{ priceDiffrenceText }}</div>
+        <div v-if="checkCredit">
+          You do not have enough credit. Remain credit it {{ user.credit }}
+        </div>
       </div>
     </div>
 
-    <button @click="submitDeal">Make a deal</button>
+    <button @click="submitDeal" :disabled="checkCredit">Make a deal</button>
     <button @click="closeModal">close</button>
   </dialog>
 </template>
@@ -88,8 +91,17 @@ export default {
       }
     },
   },
-
+  created() {
+    // console.log(this.user.credit);
+    console.log(this.checkCredit);
+  },
   computed: {
+    checkCredit() {
+      if (!this.isPriceExchange) {
+        return false;
+      }
+      return this.user.credit < this.selectedPrice;
+    },
     offerdPrice() {
       if (this.isPriceExchange) {
         return this.selectedPrice;
@@ -138,7 +150,12 @@ export default {
       } else {
         deal.exchangedFor = this.selectedExchange;
       }
-      this.$store.dispatch('deals/createDeal', deal);
+      if (this.selectedExchange || this.selectedPrice) {
+        this.$store.dispatch('deals/createDeal', deal);
+        console.log('sdf');
+      } else {
+        console.log('err');
+      }
     },
   },
 };

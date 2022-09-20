@@ -8,6 +8,7 @@ import {
   getDocs,
   getDoc,
   updateDoc,
+  increment,
   // updateDoc,
 } from 'firebase/firestore';
 import { db } from '@/db';
@@ -40,10 +41,18 @@ export default {
   },
   actions: {
     async acceptDeal({ commit }, payload) {
+      console.log(payload);
       const dealRef = doc(db, 'deals', payload.id);
       // const dealSnap = (await getDoc(dealRef)).data();
       await updateDoc(dealRef, { status: 'accepted' });
-      commit('changeStatus', { id: payload.id, status: 'accepted' });
+      if (payload.price) {
+        const userRef = doc(db, 'users', payload.fromUser.id);
+        await updateDoc(userRef, {
+          credit: increment(-payload.price),
+        });
+        commit('user/updateCredit', -payload.price, { root: true });
+        commit('changeStatus', { id: payload.id, status: 'accepted' });
+      }
     },
     async declineDeal({ commit }, payload) {
       const dealRef = doc(db, 'deals', payload.id);
