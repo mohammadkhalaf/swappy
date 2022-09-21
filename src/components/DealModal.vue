@@ -31,10 +31,19 @@
         <img v-else src="../assets/img/noimage.gif" alt="" class="img" />
         <!-- <h2>{{ d.title }}</h2>
         <h2>To {{ d.fromUser.email }}</h2>  -->
+
         <div>
-          <button @click="accept(d)">Accept</button>
-          <button @click="decline(d)">Decline</button>
+          <button :disabled="d.status === 'accepted'" @click="accept(d)">
+            Accept
+          </button>
+          <button :disabled="d.status === 'accepted'" @click="decline(d)">
+            Decline
+          </button>
         </div>
+        <p v-if="d.status === 'accepted'">
+          You have accpeted the deal send {{ d.toUser.name }} email at
+          {{ d.toUser.email }}
+        </p>
       </div>
     </div>
   </dialog>

@@ -40,17 +40,27 @@ export default {
     };
   },
   actions: {
-    async acceptDeal({ commit }, payload) {
+    async acceptDeal({ commit, rootState }, payload) {
       console.log(payload);
       const dealRef = doc(db, 'deals', payload.id);
       // const dealSnap = (await getDoc(dealRef)).data();
       await updateDoc(dealRef, { status: 'accepted' });
       if (payload.price) {
-        const userRef = doc(db, 'users', payload.fromUser.id);
-        await updateDoc(userRef, {
+        const fromUserRef = doc(db, 'users', payload.fromUser.id);
+        const toUserRef = doc(db, 'users', payload.toUser.id);
+
+        await updateDoc(fromUserRef, {
           credit: increment(-payload.price),
         });
-        commit('user/updateCredit', -payload.price, { root: true });
+        await updateDoc(toUserRef, {
+          credit: increment(payload.price),
+        });
+        if (rootState.user.user.id === payload.toUser.id) {
+          commit('user/updateCredit', payload.price, { root: true });
+        }
+        if (rootState.user.user.id === payload.fromUser.id) {
+          commit('user/updateCredit', -payload.price, { root: true });
+        }
         commit('changeStatus', { id: payload.id, status: 'accepted' });
       }
     },

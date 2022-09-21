@@ -73,7 +73,7 @@
             />
             <img v-else src="../assets/img/noimage.gif" alt="" class="img" />
             <h3>
-              Swap for
+              Swap {{ deal.toExchange.title }} for
               {{ deal.price || deal.exchangedFor.title }}
             </h3>
             <p class="status">status {{ deal.status }}</p>
