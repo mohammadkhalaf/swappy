@@ -9,6 +9,7 @@ import {
   query,
   where,
   getDoc,
+
   // where,
 } from 'firebase/firestore';
 import slugify from 'slugify';
@@ -50,13 +51,14 @@ export default {
     },
     async createExchanges({ rootState }, data) {
       console.log(data);
+      console.log(rootState.user.user.id);
       const userRef = doc(db, 'users', rootState.user.user.id);
       data.user = userRef;
       data.slug = slugify(`${data.title} ${Date.now()}`, {
         lower: true,
         strict: true,
       });
-
+      data.createdAt = new Date().toLocaleDateString();
       await addDoc(collection(db, 'exchanges'), data);
     },
   },
@@ -75,5 +77,18 @@ export default {
     exchange(state) {
       return state.exchange;
     },
+    // filteredItems(state, title) {
+    //   console.log(state);
+    //   console.log(title);
+    //   // if (!title) {
+    //   //   return state.exchanges;
+    //   // }
+    //   // const filteredExchanges = state.exchanges.filter((item) => {
+    //   //   return (
+    //   //     item.title && item.title.toLowerCase().includes(title.toLowerCase())
+    //   //   );
+    //   // });
+    //   // return filteredExchanges;
+    // },
   },
 };

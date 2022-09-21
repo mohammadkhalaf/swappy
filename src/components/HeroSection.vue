@@ -7,14 +7,32 @@
       </div>
       <div class="hero-search">
         <span>Search for </span>
-        <input type="text" placeholder="Search..." />
+        <input @input="handleSearch" type="text" placeholder="Search..." />
       </div>
     </section>
   </div>
 </template>
 
 <script>
-export default {};
+export default {
+  props: {
+    filteredItems: {
+      type: Function,
+    },
+  },
+  data() {
+    return {
+      searchTerm: '',
+    };
+  },
+  methods: {
+    handleSearch(e) {
+      const { value } = e.target;
+      this.searchTerm = value;
+      this.filteredItems(value);
+    },
+  },
+};
 </script>
 
 <style scoped>

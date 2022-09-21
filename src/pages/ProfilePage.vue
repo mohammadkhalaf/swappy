@@ -2,16 +2,10 @@
   <div class="container">
     <section class="wrapper">
       <div class="column">
-        >
         <div>
-          <h2>{{ isAuth?.name }}</h2>
-          <button @click="openModal">Update profile</button>
+          <h2>Name: {{ isAuth?.name }}</h2>
+          <button class="btn" @click="openModal">Update profile</button>
           <teleport to="body">
-            <!-- <profile-modal
-            :user="isAuth"
-            @closeOverlay="closeOverlay"
-            v-if="isOpen"
-          ></profile-modal> -->
             <modal-component
               @closeOverlay="closeOverlay"
               v-if="isOpen"
@@ -66,7 +60,7 @@
         <div class="deals" v-for="deal in receivedDeals" :key="deal.id">
           <div class="deal">
             <img
-              v-if="deal.exchangedFor"
+              v-if="deal.exchangedFor?.image"
               :src="deal.exchangedFor.image"
               alt=""
               class="img"
@@ -93,7 +87,7 @@
         <div class="deals" v-for="deal in sentDeals" :key="deal.id">
           <div class="deal">
             <img
-              v-if="deal.exchangedFor"
+              v-if="deal.exchangedFor?.image"
               :src="deal.exchangedFor.image"
               alt=""
               class="img"
@@ -128,7 +122,6 @@
 </template>
 
 <script>
-// import ProfileModal from '../components/ProfileModal.vue';
 import ModalComponent from '../components/ModalComponent.vue';
 import DealModal from '../components/DealModal.vue';
 export default {
@@ -199,6 +192,14 @@ export default {
 
   justify-content: space-between;
 }
+.col {
+  display: grid;
+  gap: 2.5rem;
+  grid-template-columns: repeat(auto-fit, minmax(30rem, 1fr));
+  margin-top: 2rem;
+  align-content: center;
+  justify-content: center;
+}
 
 .deal-container {
   display: flex;
@@ -207,17 +208,15 @@ export default {
   border: 1px solid green;
   flex-basis: 50%;
 }
-.col {
+.column {
   display: flex;
+  justify-content: space-between;
 }
+
 .deals {
-  max-width: 25rem;
   border: solid orange 1px;
 }
-/* .img {
-  width: 100%;
-  height: 60%;
-} */
+
 .active {
   color: purple;
 }

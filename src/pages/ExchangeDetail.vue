@@ -9,18 +9,26 @@
   <section v-if="exchange && exchange.slug" class="wrapper">
     <div class="header">
       <div class="col">
-        <h2>{{ exchange?.title }}</h2>
-        <h3>type {{ exchange?.type }}</h3>
-        <p>By: {{ exchangeUser?.name }}</p>
+        <h2 class="title">{{ exchange?.title }}</h2>
+        <h2 class="type">Type: {{ exchange?.type }}</h2>
+        <p class="name">By: {{ exchangeUser?.name }}</p>
+        <p class="name">City: {{ exchange?.city }}</p>
       </div>
       <div class="col">
         <div>
-          <img src="" alt="item image" />
-          <p>{{ exchange?.price }}</p>
+          <img class="img" v-if="exchange?.image" src="" alt="item image" />
+          <img
+            class="img"
+            v-else
+            src="../assets/img/noimage.gif"
+            alt="item image"
+          />
+          <p class="price">{{ exchange?.price }} $</p>
 
           <button
-            v-if="canCreateExchange"
+            class="btn"
             :disabled="isOwner"
+            v-if="canCreateExchange"
             @click="openModal"
           >
             Make exchange
@@ -30,8 +38,7 @@
       </div>
     </div>
     <div class="details">
-      <h1>{{ exchange?.city }}</h1>
-      <p>Detail</p>
+      <p>{{ exchange?.description }}</p>
     </div>
   </section>
 </template>
@@ -95,13 +102,59 @@ export default {
   padding: 2rem 5%;
 }
 .hader img {
-  max-height: 300px;
+  width: 10%;
 }
+.price {
+  font-size: 1.7rem;
+}
+.btn {
+  margin-top: 0.5rem;
+  padding: 0.5rem;
+  cursor: pointer;
+}
+.title {
+  font-size: 3rem;
+  text-transform: capitalize;
+}
+h2,
+p {
+  line-height: 145%;
+}
+.type,
+.name {
+  font-size: 2rem;
+  font-weight: 700;
+}
+
 .details {
   padding: 2rem 5%;
   background-color: rgba(197, 197, 197, 0.712);
   margin-top: 2rem;
   display: flex;
   justify-content: space-between;
+}
+.details {
+  font-size: 1.7rem;
+}
+
+@media (max-width: 850px) {
+  .header {
+    flex-direction: column-reverse;
+  }
+  .col {
+    margin-bottom: 3.5rem;
+  }
+}
+@media (max-width: 650px) {
+  .name,
+  .type {
+    font-size: 1.5rem;
+  }
+  .title {
+    font-size: 2.25rem;
+  }
+  .details {
+    font-size: 1.25rem;
+  }
 }
 </style>

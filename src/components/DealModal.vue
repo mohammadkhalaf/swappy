@@ -5,7 +5,7 @@
     <div v-if="sentDeals">
       <div v-for="d in sentDeals" :key="d.id">
         <img
-          v-if="d.exchangedFor"
+          v-if="d.exchangedFor?.image"
           :src="d.exchangedFor.image"
           alt=""
           class="img"
@@ -14,6 +14,13 @@
         <h2>{{ d.title }}</h2>
 
         <h2>To {{ d.toUser.email }}</h2>
+        <p v-if="d.status === 'accepted'">
+          {{ d.toUser.name }} has accepted the deal you get contact at
+          {{ d.toUser.email }}
+        </p>
+        <p v-if="d.status === 'declined'">
+          {{ d.toUser.name }} has declined the deal.
+        </p>
       </div>
     </div>
     <div v-if="receivedDeals">
@@ -23,7 +30,7 @@
 
         {{ d.exchangedFor?.title }}
         <img
-          v-if="d.exchangedFor"
+          v-if="d.exchangedFor?.image"
           :src="d.exchangedFor?.image"
           alt=""
           class="img"
@@ -31,7 +38,6 @@
         <img v-else src="../assets/img/noimage.gif" alt="" class="img" />
         <!-- <h2>{{ d.title }}</h2>
         <h2>To {{ d.fromUser.email }}</h2>  -->
-
         <div>
           <button :disabled="d.status === 'accepted'" @click="accept(d)">
             Accept

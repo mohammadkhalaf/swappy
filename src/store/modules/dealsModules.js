@@ -61,8 +61,8 @@ export default {
         if (rootState.user.user.id === payload.fromUser.id) {
           commit('user/updateCredit', -payload.price, { root: true });
         }
-        commit('changeStatus', { id: payload.id, status: 'accepted' });
       }
+      commit('changeStatus', { id: payload.id, status: 'accepted' });
     },
     async declineDeal({ commit }, payload) {
       const dealRef = doc(db, 'deals', payload.id);
@@ -81,13 +81,13 @@ export default {
         collection(db, 'deals'),
         where('toUser', '==', doc(db, 'users', userId))
       );
+
       const dealsSnapshots = await getDocs(dealsQuery);
 
       const deals = await Promise.all(
         dealsSnapshots.docs.map((d) => datafromDeal(d.data(), d.id))
       );
 
-      console.log(deals);
       commit('setreceivedDeals', deals);
     },
     async getSentDeals({ rootState, commit }) {

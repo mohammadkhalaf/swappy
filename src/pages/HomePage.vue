@@ -1,6 +1,6 @@
 <template>
-  <hero-section></hero-section>
-  <exchange-list></exchange-list>
+  <hero-section :filteredItems="filteredItems"></hero-section>
+  <exchange-list :searchedTiltle="searchedTiltle"></exchange-list>
 </template>
 
 <script>
@@ -11,8 +11,18 @@ export default {
     ExchangeList,
     HeroSection,
   },
+  data() {
+    return {
+      searchedTiltle: '',
+    };
+  },
   created() {
     this.user && this.$store.dispatch('user/getUserProfile', this.user);
+  },
+  methods: {
+    filteredItems(value) {
+      this.searchedTiltle = value;
+    },
   },
   computed: {
     user() {
