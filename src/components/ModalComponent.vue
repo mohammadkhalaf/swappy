@@ -1,12 +1,10 @@
 <template>
   <div class="overlay" @click="closeOverlay"></div>
-  <dialog open>
+  <dialog open class="dialog">
     <slot></slot>
     <div>
       <footer class="modal-card-foot">
-        <button @click="updateProfile" class="button is-success">
-          Save changes
-        </button>
+        <button @click="updateProfile" class="button">Save changes</button>
         <button @click="closeOverlay" class="button">Cancel</button>
       </footer>
     </div>
@@ -50,5 +48,18 @@ dialog {
   left: 50%;
   transform: translateX(-50%);
   padding: 2rem;
+  width: 40rem;
+}
+.button {
+  margin-top: 1rem;
+  padding: 0.5rem;
+  margin-right: 1rem;
+  background-color: orange;
+  border: none;
+}
+@media (max-width: 550px) {
+  .dialog {
+    width: 30rem;
+  }
 }
 </style>

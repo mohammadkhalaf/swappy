@@ -1,9 +1,9 @@
 <template>
   <div class="overlay" @click="closeModal"></div>
-  <dialog open>
-    <h1>deal modal</h1>
+  <dialog open class="dialog">
+    <h1 class="dialog-header">Your deals</h1>
     <div v-if="sentDeals">
-      <div v-for="d in sentDeals" :key="d.id">
+      <div v-for="d in sentDeals" :key="d.id" class="deal">
         <img
           v-if="d.exchangedFor?.image"
           :src="d.exchangedFor.image"
@@ -13,22 +13,24 @@
         <img v-else src="../assets/img/noimage.gif" alt="" class="img" />
         <h2>{{ d.title }}</h2>
 
-        <h2>To {{ d.toUser.email }}</h2>
-        <p v-if="d.status === 'accepted'">
+        <h3>To {{ d.toUser.email }}</h3>
+        <p v-if="d.status === 'accepted'" class="response accepted">
           {{ d.toUser.name }} has accepted the deal you get contact at
           {{ d.toUser.email }}
         </p>
-        <p v-if="d.status === 'declined'">
+        <p v-if="d.status === ' response declined'">
           {{ d.toUser.name }} has declined the deal.
         </p>
       </div>
     </div>
     <div v-if="receivedDeals">
-      <div v-for="d in receivedDeals" :key="d.id">
-        {{ d.title }}
-        {{ d.fromUser.email }}
+      <div v-for="d in receivedDeals" :key="d.id" class="deal">
+        <h2>
+          {{ d.title }} from {{ d.fromUser.name }} for
 
-        {{ d.exchangedFor?.title }}
+          {{ d.toExchange?.title }}
+        </h2>
+
         <img
           v-if="d.exchangedFor?.image"
           :src="d.exchangedFor?.image"
@@ -39,10 +41,18 @@
         <!-- <h2>{{ d.title }}</h2>
         <h2>To {{ d.fromUser.email }}</h2>  -->
         <div>
-          <button :disabled="d.status === 'accepted'" @click="accept(d)">
+          <button
+            class="btn"
+            :disabled="d.status === 'accepted'"
+            @click="accept(d)"
+          >
             Accept
           </button>
-          <button :disabled="d.status === 'accepted'" @click="decline(d)">
+          <button
+            class="btn"
+            :disabled="d.status === 'accepted'"
+            @click="decline(d)"
+          >
             Decline
           </button>
         </div>
@@ -94,10 +104,20 @@ dialog {
   transform: translateX(-50%);
   padding: 2rem;
   border: none;
+  max-height: 60vh;
+  overflow-y: auto;
 }
-h2 {
+.dialog-header {
+  text-align: center;
   margin-bottom: 1.5rem;
 }
+
+h2 {
+  margin-bottom: 1.5rem;
+  text-transform: capitalize;
+  margin-top: 0.5rem;
+}
+
 .deal-wrapper {
   border: 1px solid gray;
   padding: 0.5rem;
@@ -106,5 +126,27 @@ h2 {
 .counter-offer {
   border: 1px solid black;
   padding: 0.5rem;
+}
+.accepted {
+  margin-top: 1rem;
+  font-weight: 700;
+  font-size: 1.25rem;
+}
+
+.response.accepted {
+  color: #2ba948;
+}
+.response.declined {
+  color: #dc3545;
+}
+.deal {
+  margin-bottom: 2rem;
+}
+.btn {
+  background: orange;
+  padding: 0.5rem;
+  border: none;
+  margin: 1rem 1rem 0 0;
+  cursor: pointer;
 }
 </style>

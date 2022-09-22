@@ -11,8 +11,8 @@
               v-if="isOpen"
               :isAuth="isAuth"
             >
-              <form>
-                <h2>form of user</h2>
+              <form class="form">
+                <h2 class="form-title">Update your Profile</h2>
                 <div class="field">
                   <label class="title">Username</label>
                   <input v-model="isAuth.name" class="input" />
@@ -191,12 +191,12 @@ export default {
   justify-content: space-between;
 }
 
-.deal {
+/* .deal {
   max-width: 50rem;
-}
+} */
 .deals {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(30rem, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(30rem, 1fr));
   gap: 2.5rem;
 }
 .deal-container {
@@ -232,5 +232,21 @@ export default {
   border: none;
   padding: 0.5rem;
   cursor: pointer;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1rem;
+}
+.field .title {
+  font-size: 1.5rem;
+}
+.input {
+  height: 2rem;
+}
+.form-title {
+  text-align: center;
+  margin-bottom: 1.5rem;
 }
 </style>
