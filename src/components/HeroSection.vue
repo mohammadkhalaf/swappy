@@ -2,12 +2,20 @@
   <div class="wrapper">
     <section class="hero-section">
       <div class="hero-text">
-        <h1>Let's exchange</h1>
-        <h2>Products that you can exchange with others</h2>
+        <h1>Let's swap this for that!</h1>
+        <h2>
+          A nonprofit movement of people who are giving and getting stuff for
+          free. It's all about reuse and keeping good stuff out of landfills.
+        </h2>
       </div>
       <div class="hero-search">
         <span>Search for </span>
-        <input @input="handleSearch" type="text" placeholder="Search..." />
+        <input
+          class="input"
+          @input="handleSearch"
+          type="text"
+          placeholder="Search..."
+        />
       </div>
     </section>
   </div>
@@ -36,8 +44,20 @@ export default {
 </script>
 
 <style scoped>
+h1,
+h2 {
+  color: white;
+}
+h1 {
+  font-size: 3rem;
+  line-height: 150%;
+  margin-bottom: 3rem;
+}
+h2 {
+  font-size: 1.75rem;
+  letter-spacing: 0.2rem;
+}
 .wrapper {
-  border: 1px solid green;
   height: 550px;
   position: relative;
 }
@@ -100,7 +120,16 @@ export default {
   }
 
   .hero-search {
-    width: 80%;
+    width: 60%;
+  }
+  .hero-search span {
+    font-size: 1.25rem;
+  }
+  h1 {
+    font-size: 2.2rem;
+  }
+  h2 {
+    font-size: 1.5rem;
   }
 }
 </style>

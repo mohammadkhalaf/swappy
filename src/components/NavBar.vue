@@ -2,9 +2,10 @@
   <header :class="stylednavbar">
     <nav>
       <div>
-        <h1>Brand name</h1>
+        <h1 class="brand">Swapy</h1>
       </div>
       <div @click="openNav" v-if="open" class="overlay"></div>
+
       <ul :class="open ? 'open' : ''">
         <li v-if="isAuth">{{ getUser?.email }}</li>
         <li>
@@ -111,10 +112,13 @@ a.router-link-exact-active {
 .menu {
   display: none;
 }
+.brand {
+  font-size: 2.75rem;
+}
 @media (max-width: 800px) {
   ul {
     position: absolute;
-    display: flex;
+
     flex-direction: column;
     padding-right: 2rem;
     padding-top: 5rem;
@@ -124,8 +128,7 @@ a.router-link-exact-active {
     height: 100vh;
     z-index: 10;
     width: 25rem;
-    transform: translate(-100%);
-    transition: 0.4s all ease;
+    transform: translateX(-100%);
   }
   li,
   li a {
@@ -134,9 +137,12 @@ a.router-link-exact-active {
     margin-bottom: 2rem;
     font-weight: 700;
   }
+
   ul.open {
     transform: translate(0);
+    transition: 0.4s all ease;
   }
+
   .overlay {
     background-color: rgba(0, 0, 0, 0.3);
     position: fixed;
@@ -147,8 +153,9 @@ a.router-link-exact-active {
   }
   .menu {
     display: block;
-    font-size: 1.75rem;
+    font-size: rem;
     transition: 4s all ease;
+    font-size: 1.75rem;
   }
 }
 </style>

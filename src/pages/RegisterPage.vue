@@ -3,8 +3,10 @@
     <form @submit.prevent="submitHandler" action="">
       <h2 class="form-header">{{ isRegsitered ? 'Login' : 'Sign up' }}</h2>
 
-      <span>{{ isLoading ? 'it is loading' : '' }}</span>
-      <span>{{ isError }}</span>
+      <span class="loading">{{
+        isLoading ? 'You will be directed...' : ''
+      }}</span>
+      <span class="error">{{ isError }}</span>
       <div v-if="!isRegsitered" class="form-control">
         <label for="">Name </label>
         <input type="text" v-model="name" />
@@ -122,6 +124,13 @@ export default {
 </script>
 
 <style scoped>
+.loading,
+.error {
+  font-size: 1.5rem;
+}
+.error {
+  color: #dc3545;
+}
 .wrapper {
   padding: 7rem 5%;
 }
