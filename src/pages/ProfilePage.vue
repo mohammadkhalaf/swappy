@@ -40,10 +40,10 @@
           @click="setTab('received')"
           :class="{ active: openTab === 'received' }"
         >
-          <h2>recived : {{ isAuth && receivedDeals?.length }}</h2>
+          <h2>Recived : {{ isAuth && receivedDeals?.length }}</h2>
         </div>
         <div @click="setTab('sent')" :class="{ active: openTab === 'sent' }">
-          <h2>sent :{{ isAuth && sentDeals?.length }}</h2>
+          <h2>Sent :{{ isAuth && sentDeals?.length }}</h2>
         </div>
         <div>
           <h2>Credit: {{ isAuth?.credit }}</h2>
@@ -56,7 +56,7 @@
       "
       class="deal-container"
     >
-      <div v-if="openTab === 'received'" class="col">
+      <div v-if="openTab === 'received'" class="deals">
         <div class="deals" v-for="deal in receivedDeals" :key="deal.id">
           <div class="deal">
             <img
@@ -78,14 +78,14 @@
                 v-if="dealModalOpen"
               ></deal-modal>
             </teleport>
-            <p>{{ deal.fromUser.email }}</p>
+
             <button class="btn" @click="openDealModal">Check a deal</button>
           </div>
         </div>
       </div>
-      <div v-if="openTab === 'sent'" class="col">
-        <div class="deals" v-for="deal in sentDeals" :key="deal.id">
-          <div class="deal">
+      <div v-if="openTab === 'sent'" class="deals">
+        <div v-for="deal in sentDeals" :key="deal.id" class="deal">
+          <div>
             <img
               v-if="deal.exchangedFor?.image"
               :src="deal.exchangedFor.image"
@@ -184,41 +184,38 @@ export default {
 
 <style scoped>
 .container {
-  border: 1px solid red;
   padding: 6rem;
 }
 .wrapper {
   display: flex;
-
-  justify-content: space-between;
-}
-.col {
-  display: grid;
-  gap: 2.5rem;
-  grid-template-columns: repeat(auto-fit, minmax(30rem, 1fr));
-  margin-top: 2rem;
-  align-content: center;
-  justify-content: center;
-}
-
-.deal-container {
-  display: flex;
-}
-.column {
-  border: 1px solid green;
-  flex-basis: 50%;
-}
-.column {
-  display: flex;
   justify-content: space-between;
 }
 
+.deal {
+  max-width: 50rem;
+}
 .deals {
-  border: solid orange 1px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(30rem, 1fr));
+  gap: 2.5rem;
+}
+.deal-container {
+  margin-top: 2rem;
+}
+
+.column {
+  flex-basis: 50%;
+  display: flex;
+  justify-content: space-between;
+}
+
+.column:nth-child(2) div {
+  flex: 1;
+  cursor: pointer;
 }
 
 .active {
-  color: purple;
+  border-bottom: 2px solid orange;
 }
 .status {
   background-color: orange;
@@ -234,5 +231,6 @@ export default {
   background-color: orange;
   border: none;
   padding: 0.5rem;
+  cursor: pointer;
 }
 </style>

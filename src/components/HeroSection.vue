@@ -98,9 +98,7 @@ export default {
   .wrapper {
     max-height: 400px;
   }
-  h1 {
-    color: red;
-  }
+
   .hero-search {
     width: 80%;
   }
