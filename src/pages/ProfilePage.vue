@@ -226,6 +226,7 @@ export default {
   font-weight: bold;
   letter-spacing: 0.1rem;
 }
+
 .btn {
   margin-top: 1em;
   background-color: orange;
