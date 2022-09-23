@@ -3,22 +3,21 @@
     <nav>
       <div>
         <h1 class="brand">Swapy</h1>
+        <span>{{ open }}</span>
       </div>
-      <div @click="openNav" v-if="open" class="overlay"></div>
+      <div @click="closeNav" v-if="open" class="overlay"></div>
 
-      <ul :class="open ? 'open' : ''">
+      <ul :class="{ open: open }">
         <li v-if="isAuth">{{ getUser?.email }}</li>
         <li>
-          <router-link @click="openNav" to="/">Home</router-link>
+          <router-link @click="closeNav" to="/">Home</router-link>
+        </li>
+
+        <li>
+          <router-link @click="closeNav" to="/profile">Profile</router-link>
         </li>
         <li>
-          <router-link @click="openNav" to="/about">About</router-link>
-        </li>
-        <li>
-          <router-link @click="openNav" to="/profile">Profile</router-link>
-        </li>
-        <li>
-          <router-link @click="openNav" to="/create"
+          <router-link @click="closeNav" to="/create"
             >Create exchange</router-link
           >
         </li>
@@ -28,9 +27,13 @@
         <li @click="logoutHandler" class="clickable" v-if="isAuth">Logout</li>
       </ul>
 
-      <div @click="openNav" class="menu">
-        <font-awesome-icon v-if="open" icon="fa-solid fa-times" />
-        <font-awesome-icon v-else icon="fa-solid fa-bars" />
+      <div class="menu">
+        <font-awesome-icon
+          @click="closeNav"
+          v-if="open"
+          icon="fa-solid fa-times"
+        />
+        <font-awesome-icon @click="openNav" v-else icon="fa-solid fa-bars" />
       </div>
     </nav>
   </header>
@@ -60,7 +63,10 @@ export default {
       this.openNav();
     },
     openNav() {
-      this.open = !this.open;
+      this.open = true;
+    },
+    closeNav() {
+      this.open = false;
     },
   },
 };
@@ -103,9 +109,8 @@ a {
 .clickable {
   cursor: pointer;
 }
-a:hover {
-  color: orange;
-}
+
+a:hover,
 a.router-link-exact-active {
   color: orange;
 }
@@ -117,8 +122,8 @@ a.router-link-exact-active {
 }
 @media (max-width: 800px) {
   ul {
+    display: none;
     position: absolute;
-
     flex-direction: column;
     padding-right: 2rem;
     padding-top: 5rem;
@@ -129,6 +134,11 @@ a.router-link-exact-active {
     z-index: 10;
     width: 25rem;
     transform: translateX(-100%);
+    transition: 0.4s ease all;
+  }
+  ul.open {
+    transform: translateX(0);
+    display: flex;
   }
   li,
   li a {
@@ -136,11 +146,6 @@ a.router-link-exact-active {
     line-height: 150%;
     margin-bottom: 2rem;
     font-weight: 700;
-  }
-
-  ul.open {
-    transform: translate(0);
-    transition: 0.4s all ease;
   }
 
   .overlay {

@@ -1,11 +1,13 @@
 <template>
-  <exchange-modal
-    :exchange="exchange"
-    v-if="isOpen"
-    @closeModal="closeModal"
-    :user="user"
-    :availableExchanges="userExchanges"
-  ></exchange-modal>
+  <teleport to="body">
+    <exchange-modal
+      :exchange="exchange"
+      v-if="isOpen"
+      @closeModal="closeModal"
+      :user="user"
+      :availableExchanges="userExchanges"
+    ></exchange-modal>
+  </teleport>
   <section v-if="exchange && exchange.slug" class="wrapper">
     <div class="header">
       <div class="col">
@@ -16,7 +18,12 @@
       </div>
       <div class="col">
         <div>
-          <img class="img" v-if="exchange?.image" src="" alt="item image" />
+          <img
+            class="img"
+            v-if="exchange?.image"
+            :src="exchange.image"
+            alt="item image"
+          />
           <img
             class="img"
             v-else
@@ -33,7 +40,9 @@
           >
             Make exchange
           </button>
-          <router-link v-else to="/register"> Login to exchange</router-link>
+          <router-link class="btn" v-else to="/register">
+            Login to exchange</router-link
+          >
         </div>
       </div>
     </div>
@@ -101,16 +110,23 @@ export default {
   justify-content: space-between;
   padding: 2rem 5%;
 }
-.hader img {
-  width: 10%;
-}
+
 .price {
   font-size: 1.7rem;
 }
-.btn {
+a {
+  text-decoration: none;
+}
+.btn,
+a {
+  display: inline-block;
   margin-top: 0.5rem;
-  padding: 0.5rem;
+  padding: 0.75rem;
   cursor: pointer;
+  background-color: orange;
+  color: white;
+  font-weight: 700;
+  border: none;
 }
 .title {
   font-size: 3rem;
@@ -133,11 +149,19 @@ p {
   display: flex;
   justify-content: space-between;
 }
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
 .details {
   font-size: 1.7rem;
 }
+.img {
+  width: 20rem;
+  object-fit: cover;
+}
 
-@media (max-width: 850px) {
+@media (max-width: 600px) {
   .header {
     flex-direction: column-reverse;
   }

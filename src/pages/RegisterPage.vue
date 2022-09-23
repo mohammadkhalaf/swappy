@@ -33,7 +33,7 @@
             : 'DO not  you have an account?Sign up'
         }}
       </p>
-      <button @click="registerStatusHandler" type="button">
+      <button class="button" @click="registerStatusHandler" type="button">
         {{ !isRegsitered ? 'Log in' : 'Sign Up' }}
       </button>
     </form>
@@ -135,7 +135,6 @@ export default {
   padding: 7rem 5%;
 }
 form {
-  border: 1px solid green;
   width: min(50rem, 100%);
   margin-inline: auto;
   padding: 1em;
@@ -177,5 +176,12 @@ input:focus {
 }
 p {
   font-size: 1.5rem;
+}
+.button {
+  background-color: rgb(32, 54, 76);
+  color: white;
+  margin-top: 1rem;
+  border: none;
+  cursor: pointer;
 }
 </style>

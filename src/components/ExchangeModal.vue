@@ -1,14 +1,14 @@
 <template>
   <div class="overlay" @click="closeModal"></div>
-  <dialog open>
-    <div class="deal">
+  <dialog class="dialog" open>
+    <div>
       <h2>{{ exchange.user.name }}</h2>
       <div class="deal-wrapper">
-        <div>Offering {{ exchange.type }}</div>
-        <div>{{ exchange.title }}</div>
+        <h3>Offering {{ exchange.type }}</h3>
+        <h3>{{ exchange.title }}</h3>
       </div>
       <h2>Your Offer</h2>
-      <div class="counter-offer">
+      <div class="deal-wrapper">
         <div class="field">
           Would you prefer to exchange credit ?
           <label class="checkbox is-large">
@@ -27,18 +27,27 @@
               placeholder="40"
               :disabled="!isPriceExchange"
             />
-            <i> You don't have enough of credit </i>
           </div>
         </div>
         <div class="field">
           <label class="label">Exchange</label>
           <div class="control">
-            <div class="select">
-              <select v-model="selectedExchange" :disabled="isPriceExchange">
+            <div>
+              <select
+                v-model="selectedExchange"
+                :disabled="isPriceExchange"
+                class="select"
+              >
                 <option
                   v-for="exchange in availableExchanges"
                   :value="exchange"
                   :key="exchange.slug"
+                  class="options"
+                  :disabled="
+                    checkSentDeals?.find((i) => {
+                      return i?.exchangedFor.id === exchange.id;
+                    })
+                  "
                 >
                   {{ exchange.title }}
                 </option>
@@ -53,8 +62,11 @@
         </div>
 
         <div class="price price">{{ priceDiffrenceText }}</div>
-        <div v-if="checkCredit">
-          You do not have enough credit. Remain credit it {{ user.credit }}
+        <div class="msg" v-if="checkCredit">
+          You do not have enough credit. Remain credit is {{ user.credit }}
+        </div>
+        <div class="msg" v-if="err">
+          {{ err }}
         </div>
       </div>
     </div>
@@ -75,11 +87,16 @@ export default {
     },
     user: Object,
   },
+  created() {
+    console.log(this.$store.getters['deals/getSentDeals']);
+    this.$store.dispatch('deals/getSentDeals');
+  },
   data() {
     return {
       selectedPrice: null,
       isPriceExchange: false,
       selectedExchange: null,
+      err: null,
     };
   },
   watch: {
@@ -90,11 +107,16 @@ export default {
         this.selectedPrice = null;
       }
     },
+
+    err(value) {
+      if (value) {
+        setTimeout(() => {
+          this.err = null;
+        }, 2000);
+      }
+    },
   },
-  created() {
-    // console.log(this.user.credit);
-    console.log(this.checkCredit);
-  },
+
   computed: {
     checkCredit() {
       if (!this.isPriceExchange) {
@@ -130,6 +152,9 @@ export default {
         roundedDiff
       )}% ${diffrenceText} than the actual price `;
     },
+    checkSentDeals() {
+      return this.$store.getters['deals/getSentDeals'];
+    },
   },
 
   methods: {
@@ -152,9 +177,9 @@ export default {
       }
       if (this.selectedExchange || this.selectedPrice) {
         this.$store.dispatch('deals/createDeal', deal);
-        console.log('sdf');
+        this.closeModal();
       } else {
-        console.log('err');
+        this.err = 'You have to choose one of your exchanges';
       }
     },
   },
@@ -170,8 +195,7 @@ export default {
   height: 100%;
   width: 100%;
 }
-dialog {
-  position: fixed;
+.dialog {
   top: 20vh;
   left: 50%;
   transform: translateX(-50%);
@@ -180,14 +204,47 @@ dialog {
 }
 h2 {
   margin-bottom: 1.5rem;
+  text-transform: capitalize;
+}
+h2,
+h3 {
+  line-height: 150%;
 }
 .deal-wrapper {
   border: 1px solid gray;
   padding: 0.5rem;
   margin-bottom: 0.5rem;
 }
-.counter-offer {
-  border: 1px solid black;
+
+button {
+  margin-top: 1rem;
+  background-color: orange;
+  color: white;
+  border: none;
   padding: 0.5rem;
+  margin-right: 1rem;
+  cursor: pointer;
+}
+.select {
+  position: relative;
+}
+.options {
+  color: red;
+  border-radius: 100%;
+  width: 50%;
+}
+.msg {
+  color: #dc3545;
+  font-weight: 700;
+}
+.field {
+  margin-bottom: 1.25rem;
+}
+
+@media (max-width: 550px) {
+  .option {
+    position: absolute;
+    top: 30vh !important;
+  }
 }
 </style>

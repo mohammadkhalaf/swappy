@@ -9,6 +9,7 @@ import {
   getDoc,
   updateDoc,
   increment,
+  deleteDoc,
   // updateDoc,
 } from 'firebase/firestore';
 import { db } from '@/db';
@@ -68,7 +69,9 @@ export default {
       const dealRef = doc(db, 'deals', payload.id);
       // const dealSnap = (await getDoc(dealRef)).data();
       await updateDoc(dealRef, { status: 'declined' });
+
       commit('changeStatus', { id: payload.id, status: 'declined' });
+      await deleteDoc(doc(db, 'deals', payload.id));
     },
     async getDeals({ rootState, commit }) {
       const userId = rootState.user.user.id;
@@ -107,7 +110,6 @@ export default {
         dealsSnapshots.docs.map((d) => datafromDeal(d.data(), d.id))
       );
 
-      console.log(deals);
       commit('setSentDeals', deals);
     },
     async createDeal(_, payload) {

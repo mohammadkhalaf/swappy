@@ -3,8 +3,10 @@
     <div class="form-container">
       <h2>What do you want to exchange</h2>
 
-      <p v-if="isLoading">loading</p>
-      <p v-if="msg">created !!</p>
+      <p v-if="isLoading">An exchange is being added...</p>
+      <p class="success" v-if="msg">
+        You have successfully added an exchange !
+      </p>
       <form @submit.prevent="createExchange">
         <div class="field">
           <label class="label">Type</label>
@@ -23,7 +25,7 @@
           </div>
           <div v-if="v$.form.title.$error" class="error">
             <span v-if="v$.form.title.minLength.$invalid"
-              >Title must be at least 10 charachters long</span
+              >Title must be at least 5 charachters long</span
             >
           </div>
         </div>
@@ -87,7 +89,7 @@ export default {
   validations() {
     return {
       form: {
-        title: { required, minLength: minLength(10) },
+        title: { required, minLength: minLength(5) },
         description: { required },
         type: { required },
         image: {},
@@ -147,9 +149,9 @@ export default {
       if (isValid) {
         this.isLoading = true;
         this.v$.$reset();
-        console.log(this.form);
+
         this.$store.dispatch('exchanges/createExchanges', this.form);
-        // this.$store.dispatch('user/getUserProfile', this.form);
+
         this.msg = true;
 
         this.clearForm();
@@ -226,5 +228,8 @@ button {
   border-radius: 0.4rem;
   padding: 1rem;
   margin-left: 0.5rem;
+}
+.success {
+  color: #2ba948;
 }
 </style>

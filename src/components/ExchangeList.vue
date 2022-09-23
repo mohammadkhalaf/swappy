@@ -49,12 +49,11 @@ export default {
   },
   created() {
     this.$store.dispatch('exchanges/getExchanges');
-    console.log(this.filteredItems);
   },
 };
 </script>
 
-<style scope>
+<style scoped>
 .exchange-list {
   background-color: rgb(240, 240, 240);
 
@@ -63,7 +62,7 @@ export default {
 .list-container {
   display: grid;
   gap: 2.5rem;
-  grid-template-columns: repeat(auto-fit, minmax(30rem, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(30rem, 1fr));
   margin-top: 2rem;
   align-content: center;
   justify-content: center;

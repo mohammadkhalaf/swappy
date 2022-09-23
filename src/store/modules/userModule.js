@@ -14,10 +14,6 @@ import {
   collection,
   where,
   getDocs,
-  // query,
-  // collection,
-  // where,
-  // getDocs,
 } from 'firebase/firestore';
 import { db } from '@/db';
 
@@ -31,7 +27,6 @@ export default {
   },
   mutations: {
     setError(state, error) {
-      console.log('from mutaion' + error);
       state.error = error;
     },
     removeAlert(state) {
@@ -56,7 +51,6 @@ export default {
           await dispatch('getUserProfile', user);
           cb(user);
         } else {
-          console.log('no user');
           cb();
         }
       });
@@ -92,7 +86,7 @@ export default {
           email,
           password
         );
-        console.log(user);
+
         await dispatch('createUserProfile', {
           id: user.uid,
           name,
@@ -116,7 +110,6 @@ export default {
       }
     },
     async createUserProfile(_, { id, ...profile }) {
-      console.log(id, profile);
       await setDoc(doc(db, 'users', id), { id, ...profile });
     },
     async remvoeAlert({ commit }) {
@@ -133,7 +126,6 @@ export default {
       }
     },
     async updateUserProfile({ commit }, payload) {
-      console.log(payload);
       const userRef = doc(db, 'users', payload.id);
 
       await updateDoc(userRef, payload);

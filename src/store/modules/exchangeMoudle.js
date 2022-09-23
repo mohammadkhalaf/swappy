@@ -1,7 +1,6 @@
 import { db } from '../../db/index';
 import {
   addDoc,
-  // addDoc,
   collection,
   collectionGroup,
   doc,
@@ -9,8 +8,6 @@ import {
   query,
   where,
   getDoc,
-
-  // where,
 } from 'firebase/firestore';
 import slugify from 'slugify';
 
@@ -35,7 +32,6 @@ export default {
       exchange.id = querySnap.docs[0].id;
 
       exchange.user = userSnap;
-      console.log(exchange);
 
       commit('setExchange', exchange);
     },
@@ -50,8 +46,6 @@ export default {
       context.commit('setExchangs', exchanges);
     },
     async createExchanges({ rootState }, data) {
-      console.log(data);
-      console.log(rootState.user.user.id);
       const userRef = doc(db, 'users', rootState.user.user.id);
       data.user = userRef;
       data.slug = slugify(`${data.title} ${Date.now()}`, {
@@ -77,18 +71,5 @@ export default {
     exchange(state) {
       return state.exchange;
     },
-    // filteredItems(state, title) {
-    //   console.log(state);
-    //   console.log(title);
-    //   // if (!title) {
-    //   //   return state.exchanges;
-    //   // }
-    //   // const filteredExchanges = state.exchanges.filter((item) => {
-    //   //   return (
-    //   //     item.title && item.title.toLowerCase().includes(title.toLowerCase())
-    //   //   );
-    //   // });
-    //   // return filteredExchanges;
-    // },
   },
 };

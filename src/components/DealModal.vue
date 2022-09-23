@@ -68,9 +68,7 @@
 <script>
 export default {
   props: ['sentDeals', 'receivedDeals'],
-  created() {
-    console.log(this.receivedDeals);
-  },
+
   methods: {
     closeModal() {
       this.$emit('closeModal');
@@ -148,5 +146,8 @@ h2 {
   border: none;
   margin: 1rem 1rem 0 0;
   cursor: pointer;
+}
+.img {
+  width: 100%;
 }
 </style>

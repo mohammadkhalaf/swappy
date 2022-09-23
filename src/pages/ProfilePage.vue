@@ -149,9 +149,6 @@ export default {
     closeDealModal() {
       this.dealModalOpen = false;
     },
-    uppp() {
-      console.log('uppp');
-    },
   },
   watch: {
     user(auth) {
@@ -191,9 +188,6 @@ export default {
   justify-content: space-between;
 }
 
-/* .deal {
-  max-width: 50rem;
-} */
 .deals {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(30rem, 1fr));
@@ -249,5 +243,9 @@ export default {
 .form-title {
   text-align: center;
   margin-bottom: 1.5rem;
+}
+.img {
+  width: 100%;
+  height: 20rem;
 }
 </style>
