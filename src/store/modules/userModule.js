@@ -15,7 +15,7 @@ import {
   where,
   getDocs,
 } from 'firebase/firestore';
-import { db } from '@/db';
+import { db } from '../../db/index';
 
 export default {
   namespaced: true,

@@ -12,7 +12,7 @@ import {
   deleteDoc,
   // updateDoc,
 } from 'firebase/firestore';
-import { db } from '@/db';
+import { db } from '../../db/index';
 
 const datafromDeal = async (deal, id) => {
   if (deal.exchangedFor) {
