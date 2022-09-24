@@ -3,7 +3,6 @@
     <nav>
       <div>
         <h1 class="brand">Swapy</h1>
-        <span>{{ open }}</span>
       </div>
       <div @click="closeNav" v-if="open" class="overlay"></div>
 
